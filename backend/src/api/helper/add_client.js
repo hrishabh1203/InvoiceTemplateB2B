@@ -1,7 +1,7 @@
 const moment = require('moment');
 const con = require("../../connection/index").con;
 var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(moment(new Date(d)).format('YYYY-MM-DD').toString());}return a;};
-
+// in the client function send the result 
 function client(res,username){
   var query="select * from client where `username`='"+username+"'";
   console.log(query)
