@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://img.freepik.com/free-vector/technology-concept-background_23-2148116640.jpg?size=626&ext=jpg&ga=GA1.1.961609578.1687610561&semt=ais');
+    /* Replace 'your_image_url.jpg' with the actual URL of your image */
+    background-size: cover;
+    transform: scaleX(-1);
+    /* Flip the background image horizontally */
+    z-index: -1;
+    /* Ensure the pseudo-element is behind the content */
+}

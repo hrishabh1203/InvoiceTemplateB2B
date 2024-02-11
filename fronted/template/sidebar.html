@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <title>sidebar</title>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+        --body-color: #000000;
+        --sidebar-color: rgb(255, 255, 255);
+        --primary-color: #ebebeb8e;
+        --primary-color-light: #98989891;
+        --toggle-color: #717171;
+        --text-color: #6b6b6b;
+        --tran-03: all 0.2s ease;
+        --tran-03: all 0.3s ease;
+        --tran-04: all 0.3s ease;
+        --tran-05: all 0.3s ease;
+    }
+
+
+    body {
+        min-height: 100vh;
+        background-color: var(--body-color);
+        transition: var(--tran-05);
+    }
+
+    ::selection {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+
+    body.dark {
+        --body-color: #18191a;
+        --sidebar-color: #242526;
+        --primary-color: #3a3b3c;
+        --primary-color-light: #3a3b3c;
+        --toggle-color: #fff;
+        --text-color: #ccc;
+    }
+
+
+    /* ===== Reusable code - Here ===== */
+    .sidebar li {
+        height: 50px;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .sidebar header .image,
+    .sidebar .icon {
+        /* min-width: 40px; */
+        border-radius: 6px;
+        font-size: 28px;
+    }
+
+    .sidebar .icon {
+        min-width: 40px;
+        border-radius: 6px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+    }
+
+    .sidebar .text,
+    .sidebar .icon {
+        color: var(--text-color);
+        transition: var(--tran-03);
+    }
+
+    .sidebar .text {
+        font-size: 17px;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 1;
+    }
+
+
+
+    /* =========================== */
+
+    .sidebar header {
+        position: relative;
+    }
+
+    .sidebar header .image-text {
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar header .logo-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    header .image-text .name {
+        margin-top: 2px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    header .image-text .profession {
+        font-size: 16px;
+        margin-top: -2px;
+        display: block;
+    }
+
+    .sidebar header .image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar header .image img {
+        width: 40px;
+        border-radius: 6px;
+    }
+
+    .sidebar header .toggle {
+        position: absolute;
+        top: 50%;
+        right: -35px;
+        transform: translateY(-50%) rotate(180deg);
+        height: 40px;
+        width: 40px;
+        background-color: var(--primary-color);
+        color: var(--sidebar-color);
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        cursor: pointer;
+        transition: var(--tran-05);
+    }
+
+    body.dark .sidebar header .toggle {
+        color: var(--text-color);
+    }
+
+
+    .sidebar .menu {
+        margin-top: 40px;
+    }
+
+
+
+    .sidebar li.search-box input {
+        height: 100%;
+        width: 100%;
+        outline: none;
+        border: none;
+        background-color: var(--primary-color-light);
+        color: var(--text-color);
+        border-radius: 6px;
+        font-size: 17px;
+        font-weight: 500;
+        transition: var(--tran-05);
+    }
+
+    .sidebar li a {
+        list-style: none;
+        height: 100%;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: var(--tran-03);
+    }
+
+    .sidebar li a:hover {
+        background-color: var(--primary-color);
+    }
+
+    .sidebar li a:hover .icon,
+    .sidebar li a:hover .text {
+        color: var(--sidebar-color);
+    }
+
+    body.dark .sidebar li a:hover .icon,
+    body.dark .sidebar li a:hover .text {
+        color: var(--text-color);
+    }
+
+    .sidebar .menu-bar {
+        height: calc(100% - 55px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow-y: scroll;
+    }
+
+    .menu-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+
+
+
+    .sidebar .bottom-content li.logout-link a {
+        color: var(--text-color);
+        border-radius: 6px;
+        transition: var(--tran-05);
+        display: flex;
+        align-items: center;
+        padding: 14px;
+        text-decoration: none;
+    }
+
+    .sidebar .bottom-content li.logout-link a:hover {
+        background-color: var(--primary-color);
+        /* Adjust as needed */
+    }
+
+    .sidebar .bottom-content li.logout-link .icon,
+    .sidebar .bottom-content li.logout-link .text {
+        margin-right: 10px;
+    }
+
+    .sidebar .bottom-content li.logout-link a i {
+        margin-right: 14px;
+        /* Adjust as needed */
+    }
+
+    .sidebar .bottom-content li.logout-link .text {
+        padding-right: 14px;
+        /* Adjust as needed */
+    }
+
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: rgb(101, 57, 192);
+    }
+
+
+    .navbar-toggler {
+        border: none;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .navbar-nav {
+        margin-left: auto;
+    }
+
+    .nav-item {
+        padding: 0 15px;
+    }
+
+    .toggle {
+        cursor: pointer;
+    }
+
+    .mode-text {
+        font-size: 14px;
+    }
+
+    /* Adjusted Sidebar Styling */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        padding: 20px 0px 0px 0px;
+        background: var(--sidebar-color);
+        transition: var(--tran-05);
+        z-index: 100;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+
+    .home {
+        position: absolute;
+        margin-top: 35px;
+        left: 250px;
+        height: 100vh;
+        width: calc(100% - 250px);
+        transition: var(--tran-05);
+
+    }
+
+    .sidebar.sidebar-closed {
+        width: 56px;
+    }
+
+    .sidebar.sidebar-closed~.home {
+        display: flex;
+        margin-left: 0;
+    }
+
+    .home.home-shifted {
+        margin-left: 250px;
+    }
+
+
+    .navbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .text {
+    display: flex;
+    flex-direction: column;
+    color: #fff; /* Set the text color */
+}
+
+.navbar-nav .text .name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.navbar-nav .text .profession {
+    font-size: 16px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px; /* Add margin to separate the user icon from the arrow icon */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s; /* Add transition for smooth effect */
+}
+
+.arrow-down-icon {
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer; /* Add pointer cursor to indicate it's clickable */
+}
+
+.arrow-down-icon :hover {
+    color: #00ff0d; /* Change background color on hover */
+}
+
+/* Additional styles for icon container */
+.navbar-nav .icon-container {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Adjust the margin between the user info and icons */
+}
+
+.navbar-nav .icon-container i {
+    font-size: 23px; /* Adjust the font size as needed */
+    margin-right: 40px; /* Adjust the margin between icons as needed */
+    color: #fff; /* Set the icon color to white */
+    cursor: pointer; /* Make the icons touchable */
+    transition: color 0.3s, background-color 0.3s; /* Add transition for smooth effect */
+}
+
+.navbar-nav .icon-container i:hover {
+    color: #36ff09; 
+    
+}
+.user-card {
+    position: fixed;
+    top: 60px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    display: none;
+    z-index: 1000;
+    width: 20rem;
+}
+
+.show-card {
+    display: block;
+}
+
+/* Add these styles to your existing styles */
+.card-title,
+.card-text {
+    margin: 0; /* Remove margin */
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px; /* Add a small margin-bottom if needed */
+    color: #000000;
+}
+
+.card-text {
+    font-size: 18px;
+    color: #272727;
+}
+
+
+
+
+</style>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark  fixed-top ">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#" onclick="toggleSidebar()"><i class="fas fa-bars"></i></a><span style="color: #fff; font-size: 30px;">INVOICE</span>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item" style="display: flex; align-items: center;">
+                    <div class="icon-container">
+                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-gift"></i>
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-icon">
+                            {{ session.get('username')[0].upper() }}
+                        </div>
+                        <div class="arrow-down-icon" onclick="toggleUserCard()">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="text logo-text">
+                        <span class="name">{{ session.get('username') }}</span>
+                    </div> -->
+                </li>
+            </ul>       
+        </div>
+    </nav>
+
+    <div class="user-card" id="userCard">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="user-icon" style="width: 60px; height: 60px; font-size: 40px;">
+                    {{ session.get('username')[0].upper() }}
+                </div>
+                <div>
+                    <h5 class="card-title mb-0">{{ session.get('username') }}</h5>
+                    <p class="card-text">{{ session.get('email') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+   
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="menu-bar">
+            <div class="menu">
+
+
+                <ul class="menu-links">
+
+                    {%if session.get('username')=='admin'%}
+                    <li class="nav-link">
+                        <a href="admin">
+                            <i class="fa fa-user icon"></i>
+                            <span class="text nav-text">Admin</span>
+                        </a>
+                    </li>
+                    {%endif%}
+                    <li class="nav-link">
+                        <a href="/dashboard">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="invoice">
+                            <i class='bx bx-bar-chart-alt-2 icon'></i>
+                            <span class="text nav-text">Invoice</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="/creadit">
+                            <i class='bx bx-note icon'></i>
+                            <span class="text nav-text">Credit Notes</span>
+                        </a>
+                    </li>
+
+
+                    <li class="nav-link">
+                        <a href="client">
+                            <i class='bx bx-pie-chart-alt icon'></i>
+                            <span class="text nav-text">Your Client</span>
+                        </a>
+                    </li>
+
+
+
+
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="logout-link">
+                    <a href="/">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+
+  
+
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            var home = document.querySelector('.home');
+            sidebar.classList.toggle('sidebar-closed');
+            home.classList.toggle('home-shifted');
+        }
+
+        function closeNav() {
+            var sidebar = document.querySelector('.sidebar');
+            var home = document.querySelector('.home');
+            sidebar.classList.add('sidebar-closed');
+            home.classList.remove('home-shifted');
+        }
+
+        function toggleUserCard() {
+        var userCard = document.getElementById('userCard');
+        userCard.classList.toggle('show-card');
+    }
+
+
+    </script>
+</body>
+
+</html>

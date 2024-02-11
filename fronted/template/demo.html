@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css">
+
+    <!-- <link rel="stylesheet" href="static/css/index.css"> -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Invoice</title>
+</head>
+
+<style>
+    
+</style>
+
+<body>
+
+    <button type="button" class="btn btn-primary ml-3 mt-4" data-toggle="modal" data-target="#exampleModalCenter">
+        %Add Tax
+    </button>
+
+    <button class="btn add_notes addnew-line"><i class="fa fa-bars mx-2 mt-1 mr-2" aria-hidden="true"></i>Add New Line
+    </button>
+
+    <div class="container my-5">
+        <div class="input-cont">
+            <div class="row bg-danger mx-1 justify-content-between text-white">
+                <div class="">
+                    <h6 class="py-3 pl-5">Item</h6>
+                </div>
+                <div class="d-flex justify-content-start  w-75 pl-2">
+                    <div class="w-100 d-none">
+                        <h6 class="py-3">GST</h6>
+                    </div>
+                    <div class="w-100">
+                        <h6 class="py-3">Quantity</h6>
+                    </div>
+                    <div class="w-100">
+                        <h6 class="py-3">Rate</h6>
+                    </div>
+                    <div class="w-100">
+                        <h6 class="py-3">Amount</h6>
+                    </div>
+                    <div class="w-100 d-none">
+                        <h6 class="py-3">IGST</h6>
+                    </div>
+                    <div class="w-100 d-none">
+                        <h6 class="py-3">CGST</h6>
+                    </div>
+                    <div class="w-100 d-none">
+                        <h6 class="py-3">SGST</h6>
+                    </div>
+                    <div class="w-100 d-none">
+                        <h6 class="py-3">Total</h6>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-flex text-center mt-3 input-row">
+                <div class=""><input placeholder="item name [Required]" class="input-item form-control"
+                        style="width: 280px;" type="text"></div>
+                <div class="d-flex justify-content-around w-75">
+                    <div class="w-100  d-none"><input placeholder="GST" value="18"
+                            class="input-item form-control gst-val" type="number"></div>
+                    <div class="w-100 "><input placeholder="Quantity" class="input-item form-control q-val"
+                            type="number"></div>
+                    <div class="w-100 "><input placeholder="Rate" class="input-item form-control r-val" type="number">
+                    </div>
+                    <div class="w-100 "><input placeholder="Amount" class="input-item form-control a-val" type="number">
+                    </div>
+                    <div class="w-100  d-none"><input placeholder="IGST" class="input-item form-control igst-val"
+                            type="number"></div>
+                    <div class="w-100  d-none "><input placeholder="CGST" class="input-item form-control cgst-val"
+                            type="number"></div>
+                    <div class="w-100  d-none"><input placeholder="SGST" class="input-item form-control sgst-val"
+                            type="number"></div>
+                    <div class="w-100  d-none"><input placeholder="Total" class="input-item form-control t-val"
+                            type="number"></div>
+                    <div class="mr-auto px-1 cross"><h3>&times;</h3></div>
+                </div>
+
+            </div>
+            
+
+        </div>
+    </div>
+    <br>
+    <br><br>
+    <br><br>
+    <h2>Total[INR]<i class="fa fa-inr ml-5 t-amount" aria-hidden="true"></i></h2>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Choose Taxation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <select class="form-control tax-select mx-5" aria-label="Default select example">
+                            <option selected value="0">None</option>
+                            <option class="" value="1">GST (India)</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+
+                        <div class="gst-tab d-none">
+
+                            <h6 class=" mt-4 mx-5">Gst Type <span class="text-danger">*</span></h6>
+
+                            <div class="row ml-4">
+                                <div class=" mt-4 col-lg-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label gst-tab1" for="flexRadioDefault1">
+                                            IGST
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input gst-tab2" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            CGST & SGST
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-primary save-tax-btn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal end -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+
+        // ====================================================
+
+        function ExportToExcel(type, fn, dl) {
+            var elt = document.getElementById('example');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ?
+                XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+        }
+
+        let addlinebtn = document.querySelector('.addnew-line')
+        let inputcont = document.querySelector('.input-cont')
+        let inputrow = document.querySelector('.input-row')
+        let Quantity = document.querySelector('.q-val')
+        let Rate = document.querySelector('.r-val')
+        let Amount = document.querySelector('.a-val')
+        let igst = document.querySelector('.igst-val')
+        let cgst = document.querySelector('.cgst-val')
+        let sgst = document.querySelector('.sgst-val')
+        let total = document.querySelector('.t-val')
+        let Etotal = document.querySelector('.t-amount')
+        let cross = document.querySelector('.cross')
+        let savetaxbtn = document.querySelector('.save-tax-btn')
+        let igstcheckB = document.querySelector('#flexRadioDefault1')
+        let cgstcheckB = document.querySelector('#flexRadioDefault2')
+        let taxselect = document.querySelector('.tax-select')
+        let taxEnable = false
+
+        savetaxbtn.addEventListener('click', e => {
+            let childs = inputcont.firstElementChild.lastElementChild.querySelectorAll('div')
+            let inputchilds = inputrow.lastElementChild.querySelectorAll('div')
+            let igstall = document.querySelectorAll('.igst-val')
+            let cgstall = document.querySelectorAll('.cgst-val')
+            let sgstall = document.querySelectorAll('.sgst-val')
+            let gstall = document.querySelectorAll('.gst-val')
+            let total = document.querySelectorAll('.t-val')
+            if (taxselect.value == 1) {
+                if (cgstcheckB.checked) {
+                    taxEnable = true
+                    cgstall.forEach((e,i)=>{
+                        childs[0].classList.remove('d-none')
+                        childs[4].classList.add('d-none')
+                        childs[5].classList.remove('d-none')
+                        childs[6].classList.remove('d-none')
+                        childs[7].classList.remove('d-none')
+                        gstall[i].parentElement.classList.remove('d-none')
+                        igstall[i].parentElement.classList.add('d-none')
+                        cgstall[i].parentElement.classList.remove('d-none')
+                        sgstall[i].parentElement.classList.remove('d-none')
+                        total[i].parentElement.classList.remove('d-none')
+                    })
+                } else if (igstcheckB.checked) {
+                    taxEnable = true
+                    igstall.forEach((e,i)=>{
+                        childs[0].classList.remove('d-none')
+                        childs[4].classList.remove('d-none')
+                        childs[5].classList.add('d-none')
+                        childs[6].classList.add('d-none')
+                        childs[7].classList.remove('d-none')
+                        gstall[i].parentElement.classList.remove('d-none')
+                        igstall[i].parentElement.classList.remove('d-none')
+                        cgstall[i].parentElement.classList.add('d-none')
+                        sgstall[i].parentElement.classList.add('d-none')
+                        total[i].parentElement.classList.remove('d-none')
+                    })
+                }
+            } else {
+                taxEnable = false
+                gstall.forEach((e , i)=>{
+                        igstall[i].parentElement.classList.add('d-none')
+                        cgstall[i].parentElement.classList.add('d-none')
+                        sgstall[i].parentElement.classList.add('d-none')
+                        gstall[i].parentElement.classList.add('d-none')
+                        total[i].parentElement.classList.add('d-none')
+                })
+                childs.forEach((e, i) => {
+                    i == 0 || i == 4 || i == 7 ? childs[i].classList.add('d-none') : '';
+                    i == 0 || i == 4 || i == 7 ? inputchilds[i].classList.add('d-none') : '';
+                    i == 5 || i == 6 ? childs[i].classList.add('d-none') : '';
+                    i == 5 || i == 6 ? inputchilds[i].classList.add('d-none') : '';
+                })
+            }
+        })
+
+        Quantity.addEventListener('keyup', e => {
+            Amount.value = e.target.value * Rate.value
+            gstval()
+            totalVal()
+        })
+
+        Rate.addEventListener('keyup', e => {
+            Amount.value = e.target.value * Quantity.value
+            gstval()
+            totalVal()
+        })
+
+        Amount.addEventListener('keyup', v => {
+            Rate.value = Amount.value / Quantity.value
+            gstval()
+            totalVal()
+        })
+
+        addlinebtn.addEventListener('click', () => {
+            let newel = document.createElement('div')
+            newel.classList.add('d-flex', 'text-center', "mt-3")
+            newel.innerHTML = inputrow.innerHTML
+            inputcont.appendChild(newel)
+
+            Quantity = document.querySelectorAll('.q-val')
+            Rate = document.querySelectorAll('.r-val')
+            Amount = document.querySelectorAll('.a-val')
+            total = document.querySelectorAll('.t-val')
+            cross = document.querySelectorAll('.cross')
+
+            Quantity.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[3].firstElementChild.value = v.target.value * childs[2].firstChild.value
+                    gstval(childs)
+                    totalVal(total , Amount)
+                })
+            });
+
+            Amount.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[2].firstElementChild.value = v.target.value / childs[1].firstChild.value
+                    gstval(childs)
+                    totalVal(total , Amount)
+                })
+            });
+
+            
+            Rate.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[3].firstElementChild.value = v.target.value * childs[1].firstChild.value
+                    gstval(childs)
+                    totalVal(total , Amount)
+                })
+            });
+
+            cross.forEach((e , i)=>{
+                e.addEventListener('click' , v=>{
+                Amount = document.querySelectorAll('.a-val')
+                total = document.querySelectorAll('.t-val')
+                    total[i].value = 0
+                    Amount[i].value = 0
+                    totalVal(total , Amount)
+                    v.target.parentElement.parentElement.parentElement.remove()
+                })
+            })
+
+        })
+
+        cross.addEventListener('click' , e=>{
+            e.target.parentElement.parentElement.parentElement.remove()
+        })
+
+
+        function gstval(param) {
+            let len = document.querySelectorAll('.q-val')
+            let tval;
+
+            if (len.length <= 1) {
+                let onePercent = Amount.value / 100
+                igst.value = onePercent * 18
+                cgst.value = onePercent * 9
+                sgst.value = onePercent * 9
+                tval = Number(Amount.value) + Number(cgst.value) + Number(sgst.value)
+                total.value = tval.toFixed(2).toString().split('.')[1] == '00' ? Math.floor(tval) : tval.toFixed(2)
+            } else {
+                if (param[3].firstElementChild.value >= 0) {
+                    let onePercent = param[3].firstChild.value / 100
+                    param[4].firstElementChild.value = (onePercent * 18).toFixed(2)
+                    param[5].firstElementChild.value = (onePercent * 9).toFixed(2)
+                    param[6].firstElementChild.value = (onePercent * 9).toFixed(2)
+                    param[7].firstElementChild.value = Number(param[3].firstChild.value) + Number(param[4].firstChild.value) + Number(param[5].firstChild.value)
+                }
+            }
+
+        }
+
+        let totalVal = (p1 , p2) => {
+            let len = document.querySelectorAll('.t-val')
+            let Eval = 0
+            if (len.length <= 1) {
+                total.parentElement.classList.contains('d-none')  ? Etotal.innerText = Amount.value : Etotal.innerText = total.value 
+            } else {
+                if (taxEnable) {
+                    p1.forEach(e => e.parentElement.classList.contains('d-none') || !e.parentElement ? Eval = Eval : Eval = Eval + Number(e.value))
+                } else {
+                    p2.forEach(e => e.parentElement.classList.contains('d-none') ? Eval = Eval : Eval = Eval + Number(e.value))
+                }   
+                Etotal.innerText = Eval.toFixed(2).toString().split('.')[1] == '00' ? Math.floor(Eval) : Eval.toFixed(2)
+            }
+        }
+
+        // tax
+
+        let gsttab = document.querySelector('.gst-tab')
+
+        taxselect.addEventListener('change', e => {
+            if (e.target.value == 1) {
+                gsttab.classList.remove('d-none')
+            } else {
+                gsttab.classList.add('d-none')
+            }
+        })
+
+        // tax end
+
+
+        // ===================================================  
+    </script>
+
+</body>
+
+</html>

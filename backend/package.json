@@ -1,0 +1,31 @@
+{
+  "name": "appanalytics-sample-template",
+  "version": "1.0.0",
+  "description": "This repository contain sample repository for node porjects.",
+  "main": "src/server.js",
+  "scripts": {
+    "lint": "./node_modules/eslint/bin/eslint.js --fix .",
+    "start-dev": "clear && npm run lint && NODE_ENV=development DEBUG=* PORT=8888 nodemon .",
+    "start-prod": "NODE_ENV=production ./node_modules/pm2/bin/pm2 start src/server.js",
+    "show": "DEBUG=* NODE_ENV=production ./node_modules/pm2/bin/pm2 show server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "(Appanalytics)",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "mysql": "^2.18.1",
+    "process": "^0.11.10",
+    "query": "^0.2.0",
+    "redis": "^4.6.7",
+    "request": "^2.88.2",
+    "util": "^0.12.5"
+  }
+}

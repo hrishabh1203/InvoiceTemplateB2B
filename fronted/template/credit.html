@@ -1,0 +1,1343 @@
+{%include 'sidebar.html'%}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="https://cdn.quilljs.com/1.1.6/quill.snow.css" rel="stylesheet">
+    <script src="static/js/ajax.js"></script>
+    <title>Creadit Note</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+</head>
+
+<style>
+    body {
+        /* background-color: #ECECEC; */
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://img.freepik.com/free-vector/technology-concept-background_23-2148116640.jpg?size=626&ext=jpg&ga=GA1.1.961609578.1687610561&semt=ais');
+        /* Replace 'your_image_url.jpg' with the actual URL of your image */
+        background-size: cover;
+        transform: scaleX(-1);
+        /* Flip the background image horizontally */
+        z-index: -1;
+        /* Ensure the pseudo-element is behind the content */
+    }
+
+    .shadow {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border-radius: 10px;
+        background-color: #ffffff92;
+    }
+
+    .text_editor {
+        display: none;
+    }
+
+    .text_editor.active {
+        display: block;
+    }
+
+    .t_conditions {
+        display: none;
+    }
+
+    .t_conditions.active {
+        display: block;
+    }
+
+    form.example input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+    }
+
+    form.example button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: #2196F3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+    }
+
+    form.example button:hover {
+        background: #0b7dda;
+    }
+
+    form.example::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    #editor {
+        height: 130px;
+    }
+
+    .modal-content {
+        width: 200%;
+        margin-left: -15rem !important;
+        background: linear-gradient(to right, #aedeee, #e5a4af);
+        color: rgb(254, 254, 254);
+        border-radius: 20px;
+
+    }
+
+
+    .fa {
+        float: right;
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 1rem;
+    }
+
+    #show_1 {
+        display: none;
+    }
+
+    #show_1.active {
+        display: flex;
+    }
+
+    #show_2 {
+        display: none;
+    }
+
+    #show_2.active {
+        display: flex;
+    }
+
+    #show_3 {
+        display: none;
+    }
+
+    #show_3.active {
+        display: flex;
+    }
+
+    #uploadedImage {
+        height: 150px;
+        width: 35%;
+    }
+
+    .input-field {
+        margin: 19px 1rem;
+        border: none;
+        border-bottom: 1px solid #ced4da;
+        width: 33rem;
+    }
+
+    .input-item {
+        border: none;
+        border-bottom: 2px solid black;
+        outline: none;
+        width: 100%;
+    }
+
+    .item {
+        border: none;
+        color: white;
+        background-color: none !important;
+        background: none !important;
+        outline: none;
+    }
+
+    .num {
+        border: none;
+        border-bottom: 1px solid black;
+    }
+
+    .num2 {
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+    }
+
+    #wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .bank {
+        display: none;
+    }
+
+    .bank.active {
+        display: block;
+    }
+
+    .Billed_size {
+        font-size: 1rem;
+    }
+
+    .weight {
+        font-weight: 600;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    #coustmers {
+        display: flex;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        border: 2px solid #333;
+        border-radius: 5px;
+        margin: 10px;
+        color: #333;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #333;
+        color: #fff;
+        border-color: #fff;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+
+    .btn-white {
+        color: #fff;
+        background-color: #333;
+    }
+
+    .btn-white:hover {
+        background-color: #fff;
+        color: #333;
+        border-color: #333;
+    }
+
+    /* Additional styles for button size and spacing */
+    .btn-sm {
+        font-size: 12px;
+    }
+
+    .m-b-10 {
+        margin-bottom: 10px;
+    }
+
+    .p-l-5 {
+        padding-left: 5px;
+    }
+
+    #heading_payment {
+        border-radius: 5px;
+    }
+
+    .modalfade {
+        background: rgba(0, 0, 0, 0.511);
+    }
+
+    .fadeInDown {
+        animation-name: fadeInDown;
+        animation-duration: 1s;
+        animation-fill-mode: both;
+    }
+
+    @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            transform: translate3d(0, -100%, 0);
+        }
+
+        50% {
+            opacity: .5;
+            transform: translate3d(0, 20%, 0);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        /* Adjust the margin as needed */
+    }
+
+    .input-item {
+        margin-right: 5px;
+        /* Adjust the margin between input items */
+    }
+
+
+
+    /* Optional: Style for the cross on hover */
+    .cross:hover {
+        color: red;
+        /* Change the color as needed */
+        cursor: pointer;
+    }
+
+    .spacing {
+        margin-right: 5px;
+        /* Adjust the margin as needed */
+    }
+
+    .flex-column {
+        flex-grow: 1;
+    }
+</style>
+
+<body>
+
+    <section class="home">
+        <div class="container mt-5 mb-5 px-5 border border-2 " style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;"
+            id="coustmers">
+
+            <div class="row m-5">
+
+                <div class="col-md-12">
+
+                    <div class="card p-3 no-border-print">
+
+
+                        <div class="row">
+                            <span id="username" hidden>{{session.get('username')}}</span>
+                            <div class="col-md-6">
+
+                                <div class="inputbox mt-3 mr-2">
+                                    <p class="ms-2">Credit Note No </p>
+                                    <input style="font-size: small;" type="text" name="name" class="form-control"
+                                        required="required" id="invoice_no">
+
+
+                                </div>
+
+                                <div class="inputbox mt-3 mr-2">
+                                    <p class="ms-2">Credit Note Date
+                                    </p>
+                                    <input style="font-size: small;" type="date" name="name" class="form-control"
+                                        required="required" id="invoice_date">
+
+
+                                </div>
+
+                                <div class="inputbox mt-3 mr-2">
+                                    <p class="ms-2">Link Invoice</p>
+                                    <input style="font-size: small;" list="suggestions" name="name" class="form-control"
+                                        required="required" id="link_invoice">
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                {%for data in detail: %}
+                                {%if data.get('thumbnail')| length>0%}
+                                <label style="display: none;">{{data.get('thumbnail')}}</label>
+                                <img id="image" src="{{data.get('thumbnail')}}" alt="Image"
+                                    style="height: 8rem; margin-left: 5rem; margin-top: 4rem;">
+                                {%else%}
+                                <div class="d-flex flex-row">
+
+                                    <form method="post" class="offset-md-2 col-md-8">
+                                        <div class="my-2">
+                                            <input type="file" class="" id="images" name="images[]" accept="image/*"
+                                                onchange="preview_images();" multiple />
+                                        </div>
+                                        <div>
+
+                                            <button onclick="return resetForm();" type="reset"
+                                                class="btn btn-danger">Reset</button>
+                                            <button type="button" onclick="uploadImages()"
+                                                class="btn btn-primary">Upload</button>
+                                        </div>
+                                        <br>
+                                        <label for="images" id="image_preview"></label>
+                                    </form>
+                                    <br>
+
+                                </div>
+
+                                {%endif%}
+                                {%endfor%}
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="container  mt-5">
+                        <div class="row" id="wrapper">
+                            <div class="col-lg-5  p-3 shadow">
+                                <h5 class="text-center">Billed To (Client Details)</h5>
+
+                                <div class="ms-5 pt-3 pb-3" id="details">
+                                    <p class="text-center">Business details</p>
+                                    <div class="mt-4 ml-4">
+                                        {%for row in detail: %}
+                                        <div class="d-flex">
+                                            <p class="fs-2" style="font-size: 1.2rem;">Business Name:</p>
+                                            <p class="fs-2 ml-3" style="font-size: 1.2rem; font-weight: 600;">
+                                                {{row.get('bussiness_name')}}</p>
+                                        </div>
+                                        <div class="d-flex">
+                                            <p class="fs-2" style="font-size: 1.2rem;">Address:</p>
+                                            <p class="fs-2 ml-3" style="font-size: 1.2rem; font-weight: 600;">
+                                                {{row.get('address')}}</p>
+                                        </div>
+                                        {%endfor%}
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-5  p-3 shadow">
+                                <h5 class="text-center">Billed To (Client Details)</h5>
+
+                                <div class="billed_2">
+                                    <div class="input-group d-flex justify-content-center">
+                                        <select class="form-control custom-select" name="client" style="width: 256px;"
+                                            id="billed_to">
+                                            <option value=""></option>
+                                            {% for client in client: %}
+                                            <option value="{{client.get('Business_name')}}">
+                                                {{client.get('Business_name')}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="button" class="btn mt-3 bg-primary text-white"
+                                            onclick="fetch_client()">search</button>
+                                    </div>
+
+
+
+                                    <div class="ms-5 pt-3 pb-3">
+                                        <div class="d-flex justify-content-between" id="details">
+                                            <p class="ml-4">Business details</p>
+                                            <button data-toggle="modal" data-target="#myModal"
+                                                class="btn bg-primary text-white">+ Add Client</button>
+                                        </div>
+                                        <div class="ml-4 Billed_size" id="client_business">
+                                            <div class="d-none mt-2">
+                                                <p class="fs-2">Business Name:</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.name</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">Address:</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.address</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">GST NO.</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.gstno</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">PAN NO.</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.panNo</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">VAT NO.</p>
+                                                <p class="fs-2 ml-3 weight"></p>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="m-auto">
+                                </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Button trigger modal -->
+                        <div class="row">
+                            <!-- <button type="button" class="btn btn-primary ml-3 mt-4" data-toggle="modal"
+                            data-target="#exampleModalCenter">
+                            %Add Tax
+                        </button> -->
+                            <button type="button" class="btn btn-primary ml-3 mt-4" data-toggle="modal"
+                                data-target="#exampleModalCenter">
+                                %Add Tax
+                            </button>
+                            <div class="mt-4 ml-5">
+                                <label class="mr-3" for="">Currency</label>
+                                <select id="selectBox" onchange="changeFunc()" class="form-select rounded p-2"
+                                    aria-label="Default select example">
+                                    <option value="1">India Rupee [INR]</option>
+                                    <option value="2">US Dollar (USD $)</option>
+                                    <option value="3">Euro [EURO]</option>
+                                    <option value="4">British Pound Sterling [GBP]</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="container my-5">
+                            <div class="input-cont" id="payment_table">
+                                <div class="row bg-danger mx-1 justify-content-between text-white">
+                                    <div class="">
+                                        <h6 class="py-3 pl-5">Item</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-start  w-75 pl-2">
+                                        <div class="w-100 d-none">
+                                            <h6 class="py-3">GST</h6>
+                                        </div>
+                                        <div class="w-100">
+                                            <h6 class="py-3">Quantity</h6>
+                                        </div>
+                                        <div class="w-100">
+                                            <h6 class="py-3">Rate</h6>
+                                        </div>
+                                        <div class="w-100">
+                                            <h6 class="py-3">Amount</h6>
+                                        </div>
+                                        <div class="w-100 d-none">
+                                            <h6 class="py-3">IGST</h6>
+                                        </div>
+                                        <div class="w-100 d-none">
+                                            <h6 class="py-3">CGST</h6>
+                                        </div>
+                                        <div class="w-100 d-none">
+                                            <h6 class="py-3">SGST</h6>
+                                        </div>
+                                        <div class="w-100 d-none">
+                                            <h6 class="py-3">Total</h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="d-flex text-center mt-3 input-row">
+                                    <div class=""><input placeholder="item name [Required]"
+                                            class="input-item form-control" style="width: 220px;" type="text"></div>
+                                    <div class="d-flex justify-content-around w-75">
+                                        <div class="w-100  d-none"><input placeholder="GST" value="18"
+                                                class="input-item form-control gst-val" type="number"></div>
+                                        <div class="w-100 "><input placeholder="Quantity"
+                                                class="input-item form-control q-val" type="number"></div>
+                                        <div class="w-100 "><input placeholder="Rate"
+                                                class="input-item form-control r-val" type="number">
+                                        </div>
+                                        <div class="w-100 "><input placeholder="Amount"
+                                                class="input-item form-control a-val" type="number">
+                                        </div>
+                                        <div class="w-100  d-none"><input placeholder="IGST"
+                                                class="input-item form-control igst-val" type="number"></div>
+                                        <div class="w-100  d-none "><input placeholder="CGST"
+                                                class="input-item form-control cgst-val" type="number"></div>
+                                        <div class="w-100  d-none"><input placeholder="SGST"
+                                                class="input-item form-control sgst-val" type="number"></div>
+                                        <div class="w-100  d-none"><input placeholder="Total"
+                                                class="input-item form-control t-val" type="number"></div>
+                                        <div class="mr-auto px-1 cross">
+                                            <h3>&times;</h3>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Choose Taxation</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <div class="row">
+
+                                            <select class="form-control tax-select mx-5"
+                                                aria-label="Default select example">
+                                                <option selected value="0">None</option>
+                                                <option class="" value="1">GST (India)</option>
+                                            </select>
+
+                                            <div class="gst-tab d-none">
+
+                                                <h6 class=" mt-4 mx-5">Gst Type <span class="text-danger">*</span>
+                                                </h6>
+
+                                                <div class="row ml-4">
+                                                    <div class=" mt-4 col-lg-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="flexRadioDefault" id="flexRadioDefault1">
+                                                            <label class="form-check-label gst-tab1"
+                                                                for="flexRadioDefault1">
+                                                                IGST
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input gst-tab2" type="radio"
+                                                                name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                                            <label class="form-check-label" for="flexRadioDefault2">
+                                                                CGST & SGST
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="button" data-dismiss="modal"
+                                            class="btn btn-primary save-tax-btn">Save
+                                            changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- modal end -->
+
+                        <div class="row">
+
+                            <div class="col-lg-7">
+
+                                <div class="">
+                                    <button class="btn add_notes addnew-line" id="addnewline"><i class="fa fa-bars mx-2 mt-1 mr-2"
+                                            aria-hidden="true"></i>Add New Line
+                                    </button>
+
+                                    <button class="btn add_notes editor" id="add_note"><i
+                                            class="fa fa-bars mx-2 mt-1 mr-2" aria-hidden="true"></i>Add
+                                        Notes</button>
+
+                                    <button class="btn add_notes  t_show" id="add_info"><i
+                                            class="fa fa-bars mr-2 mx-2 mt-1" aria-hidden="true"></i>Add
+                                        Additional Info</button>
+                                    <br><br>
+
+                                    <div class="text_editor">
+                                        <div id="editor" class="editor_value">
+
+                                        </div>
+                                    </div>
+
+                                    <div class=" py-3 mt-5 t_conditions" id="conditions">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label class="ml-3" for="Conditions">Terms and Conditions
+                                                    <hr>
+                                                    <button class="btn btn-primary" onclick="addInputOrLineBreak()">+
+                                                        Add
+                                                        Row</button>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-6">
+
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div id="inputContainer">
+                                            <div class="d-flex">
+                                                <label for="num" class="inputcount">1.</label>
+                                                <input type="text" class="num form-control px-4 ml-3 int-child"
+                                                    style="max-width: 34rem;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-5 pl-5">
+
+                                <h6><i class="fa fa-tag mr-1" aria-hidden="true"></i>Add Discounts/Additional
+                                    Charges</h6>
+                                <hr>
+                                <div class="d-flex">
+                                    <h2>Total<h2 class="future-clicked" id="future-clicked">[INR]</h2><i
+                                            class="fa fa-inr ml-5 t-amount" id="amount"></i></h2>
+                                </div>
+                                <hr>
+
+                                <div class=" py-5 px-5">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 mb-4 ">
+                            <button class="btn text-center btn-success px-3 button-to-remove"
+                                onclick="create_invoice(); updateRowDataArray();"><a class="text-right"
+                                    href="/invoicetheme">Save & continue</a></button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+    </section>
+
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content mx-auto">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New credit</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="row m-2">
+                        <div class="col-lg-12">
+                            <label for="logo">Add Logo</label><br>
+                            <input type='file' class="mt-3 mb-3" id="readUrl">
+
+                            <img id="uploadedImage" src="#" class="m-4" alt="Uploaded Image"
+                                accept="image/png, image/jpeg" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="row mx-1">
+
+                        <div class="col-lg-6">
+                            <form>
+
+                                <label for="">Client's Business Name
+                                    <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="client">
+                                <br>
+                                <label for="s_country">Select Country
+                                    <span class="text-danger">*</span></label><br>
+                                <select class=" form-control form-select" id="s_country"
+                                    aria-label="Default select example">
+                                    <option selected></option>
+                                    <option value="1">India</option>
+                                    <option value="2">Unnited Kingdom (Uk)</option>
+                                    <option value="2">United States of America (US)</option>
+                                    <option value="3">Germany</option>
+                                    <option value="3">Canada</option>
+                                </select>
+
+                            </form>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <form>
+
+                                <label for="">Client Industry
+                                </label>
+                                <input type="text" class="form-control" id="industry">
+
+                                <label for="" class="m-3">City
+                                </label>
+                                <input type="text" class="form-control" id="city">
+
+
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- tax information -->
+
+                    <div class="row mx-1 mt-5" id="tax">
+                        <div class="col-lg-12">
+                            <h6>Tax Information <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_1" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="row mx-1" id="show_1">
+                        <div class="col-lg-6 my-4">
+                            <label for="" class="vat-label">VAT Number</label>
+                            <div class="gamech" style="display: none;">
+                                <input type="text" class="vat-int ">
+                                <button class="btn save-btn"> save </button>
+                            </div>
+                            <input type="text" class="form-control b-vat" id="vat">
+                        </div>
+                    </div>
+
+                    <!-- tax information end -->
+
+                    <!-- address -->
+
+                    <div class="row mt-5 mx-1">
+                        <div class="col-lg-12">
+                            <h6>Address <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_2" aria-hidden="true"></i>
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <div class="row mx-1 my-4" id="show_2">
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Select Country</label>
+                            <select class=" form-control form-select" id="s_country"
+                                aria-label="Default select example">
+                                <option selected></option>
+                                <option value="1">India</option>
+                                <option value="2">Unnited Kingdom (Uk)</option>
+                                <option value="2">United States of America (US)</option>
+                                <option value="3">Germany</option>
+                                <option value="3">Canada</option>
+                            </select>
+                            <br>
+                            <label for="" class="">City</label>
+                            <input type="text" class="form-control" id="city">
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="" class="">State / Province</label>
+                            <input type="text" class="form-control" id="state">
+                            <br>
+                            <label for="" class="">Postal Code / Zip Code</label>
+                            <input type="text" class="form-control" id="zip">
+                        </div>
+
+                        <div class="col-lg-12 my-3">
+                            <label for="" class="">Street Address</label>
+                            <input type="text" class="form-control" id="steet">
+                        </div>
+
+                    </div>
+
+                    <!-- address end -->
+
+                    <!-- Additional Details -->
+
+                    <div class="row mt-5 mx-1">
+                        <div class="col-lg-12">
+                            <h6>Additional Details <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_3" aria-hidden="true"></i>
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <div class="row mx-1 my-4" id="show_3">
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Business Alias (Nick Name)</label>
+                            <input type="text" class="form-control" id="Nick">
+                            <br>
+                            <label for="" class="">Email</label>
+                            <input type="text" class="form-control" id="Email">
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Unique Key</label>
+                            <input type="text" class="form-control" id="Key">
+                            <br>
+
+                            <label for="" class="">Phone Number</label>
+                            <input type="text" class="form-control" list="Number" id="Number">
+                            <datalist id="Number">
+                                <option value="123456789">
+                                <option value="000000078">
+                            </datalist>
+
+                        </div>
+
+
+                    </div>
+
+                    <!-- Additional Details end -->
+
+                    <!-- Bank Details -->
+
+                    <div class="row mx-1 my-4">
+                        <div class="col-lg-12 ">
+                            <div class="d-flex  justify-content-between">
+                                <h6 class="py-4">4. Bank Details</h6>
+                                <i id="bank_tab" class="fa fa-angle-down angle py-4"></i>
+                            </div>
+
+                            <div class="bank">
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Account Holder Name</label>
+                                    <input type="text" placeholder="Account Holder Name" id="account_h"
+                                        class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Account Number</label>
+                                    <input type="text" placeholder="Account Number" id="account_n" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">IFSC</label>
+                                    <input type="text" placeholder="IFSC" id="ifsc" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">SWIFT</label>
+                                    <input type="text" placeholder="SWIFT" id="swift" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Bank</label>
+                                    <input type="text" placeholder="Bank" id="bank" class="form-control">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Bank Details End -->
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add_client()">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal End -->
+
+
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script src="https://cdn.quilljs.com/1.1.6/quill.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="static/js/ajax.js"></script>
+    <script>
+
+
+        function addInputOrLineBreak() {
+            let container = document.querySelector('#inputContainer')
+            let containerhtml = container.firstElementChild.innerHTML
+            let inputdiv = document.createElement('div')
+            inputdiv.classList.add('d-flex')
+            inputdiv.innerHTML = containerhtml
+            container.appendChild(inputdiv)
+            let label = document.querySelectorAll('.inputcount')
+            label.forEach((e, i) => { e.innerText = `${i + 1}.` })
+        }
+
+        document.getElementById('readUrl').addEventListener('change', function () {
+            if (this.files[0]) {
+                var picture = new FileReader();
+                picture.readAsDataURL(this.files[0]);
+                picture.addEventListener('load', function (event) {
+                    document.getElementById('uploadedImage').setAttribute('src', event.target.result);
+                    document.getElementById('uploadedImage').style.display = 'block';
+                });
+            }
+        });
+
+
+        function changeFunc() {
+            var selectedValue = document.getElementById('selectBox');
+            console.log(selectedValue.value)
+            if (selectedValue.value == '1') {
+                Etotal.classList.remove('fa-usd')
+                Etotal.classList.remove('fa-eur')
+                Etotal.classList.remove('fa-gbp')
+                Etotal.classList.add('fa-inr')
+                document.getElementById('future-clicked').innerText = '[INR]';
+            }
+            else if (selectedValue.value == '2') {
+                document.getElementById('future-clicked').innerText = '[USD]';
+                Etotal.classList.remove('fa-inr')
+                Etotal.classList.remove('fa-eur')
+                Etotal.classList.remove('fa-gbp')
+                Etotal.classList.add('fa-usd')
+                console.log(document.getElementById('future-clicked'))
+            }
+            else if (selectedValue.value == '3') {
+                Etotal.classList.remove('fa-usd')
+                Etotal.classList.remove('fa-gbp')
+                Etotal.classList.remove('fa-inr')
+                Etotal.classList.add('fa-eur')
+                document.getElementById('future-clicked').innerText = '[EURO]';
+            }
+            else if (selectedValue.value == '4') {
+                Etotal.classList.remove('fa-eur')
+                Etotal.classList.remove('fa-usd')
+                Etotal.classList.remove('fa-inr')
+                Etotal.classList.add('fa-gbp')
+                document.getElementById('future-clicked').innerText = '[GBP]';
+            }
+        }
+
+
+        // total text chenge end
+
+        function ExportToExcel(type, fn, dl) {
+            var elt = document.getElementById('example');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ?
+                XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+        }
+
+        let addlinebtn = document.querySelector('.addnew-line')
+        let inputcont = document.querySelector('.input-cont')
+        let inputrow = document.querySelector('.input-row')
+        let Quantity = document.querySelector('.q-val')
+        let Rate = document.querySelector('.r-val')
+        let Amount = document.querySelector('.a-val')
+        let igst = document.querySelector('.igst-val')
+        let cgst = document.querySelector('.cgst-val')
+        let sgst = document.querySelector('.sgst-val')
+        let total = document.querySelector('.t-val')
+        let Etotal = document.querySelector('.t-amount')
+        let cross = document.querySelector('.cross')
+        let savetaxbtn = document.querySelector('.save-tax-btn')
+        let igstcheckB = document.querySelector('#flexRadioDefault1')
+        let cgstcheckB = document.querySelector('#flexRadioDefault2')
+        let taxselect = document.querySelector('.tax-select')
+        let taxEnable = false
+
+        savetaxbtn.addEventListener('click', e => {
+            let childs = inputcont.firstElementChild.lastElementChild.querySelectorAll('div')
+            let inputchilds = inputrow.lastElementChild.querySelectorAll('div')
+            let igstall = document.querySelectorAll('.igst-val')
+            let cgstall = document.querySelectorAll('.cgst-val')
+            let sgstall = document.querySelectorAll('.sgst-val')
+            let gstall = document.querySelectorAll('.gst-val')
+            let total = document.querySelectorAll('.t-val')
+            if (taxselect.value == 1) {
+                if (cgstcheckB.checked) {
+                    taxEnable = true
+                    cgstall.forEach((e, i) => {
+                        childs[0].classList.remove('d-none')
+                        childs[4].classList.add('d-none')
+                        childs[5].classList.remove('d-none')
+                        childs[6].classList.remove('d-none')
+                        childs[7].classList.remove('d-none')
+                        gstall[i].parentElement.classList.remove('d-none')
+                        igstall[i].parentElement.classList.add('d-none')
+                        cgstall[i].parentElement.classList.remove('d-none')
+                        sgstall[i].parentElement.classList.remove('d-none')
+                        total[i].parentElement.classList.remove('d-none')
+                    })
+                } else if (igstcheckB.checked) {
+                    taxEnable = true
+                    igstall.forEach((e, i) => {
+                        childs[0].classList.remove('d-none')
+                        childs[4].classList.remove('d-none')
+                        childs[5].classList.add('d-none')
+                        childs[6].classList.add('d-none')
+                        childs[7].classList.remove('d-none')
+                        gstall[i].parentElement.classList.remove('d-none')
+                        igstall[i].parentElement.classList.remove('d-none')
+                        cgstall[i].parentElement.classList.add('d-none')
+                        sgstall[i].parentElement.classList.add('d-none')
+                        total[i].parentElement.classList.remove('d-none')
+                    })
+                }
+            } else {
+                taxEnable = false
+                gstall.forEach((e, i) => {
+                    igstall[i].parentElement.classList.add('d-none')
+                    cgstall[i].parentElement.classList.add('d-none')
+                    sgstall[i].parentElement.classList.add('d-none')
+                    gstall[i].parentElement.classList.add('d-none')
+                    total[i].parentElement.classList.add('d-none')
+                })
+                childs.forEach((e, i) => {
+                    i == 0 || i == 4 || i == 7 ? childs[i].classList.add('d-none') : '';
+                    i == 0 || i == 4 || i == 7 ? inputchilds[i].classList.add('d-none') : '';
+                    i == 5 || i == 6 ? childs[i].classList.add('d-none') : '';
+                    i == 5 || i == 6 ? inputchilds[i].classList.add('d-none') : '';
+                })
+            }
+        })
+
+        Quantity.addEventListener('keyup', e => {
+            Amount.value = e.target.value * Rate.value
+            gstval()
+            totalVal()
+        })
+
+        Rate.addEventListener('keyup', e => {
+            Amount.value = e.target.value * Quantity.value
+            gstval()
+            totalVal()
+        })
+
+        Amount.addEventListener('keyup', v => {
+            Rate.value = Amount.value / Quantity.value
+            gstval()
+            totalVal()
+        })
+
+        let rowDataArray = [];
+
+        document.getElementById('addnewline').addEventListener('click', () => {
+            let newel = document.createElement('div');
+            newel.classList.add('d-flex', 'text-center', 'mt-3', 'input-row');
+            newel.innerHTML = inputrow.innerHTML;
+            inputcont.appendChild(newel);
+
+            let Quantity = document.querySelectorAll('.q-val');
+            let Rate = document.querySelectorAll('.r-val');
+            let Amount = document.querySelectorAll('.a-val');
+            let total = document.querySelectorAll('.t-val');
+            let cross = document.querySelectorAll('.cross');
+
+            Quantity.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[3].firstElementChild.value = v.target.value * childs[2].firstChild.value;
+                    gstval(childs);
+                    totalVal(total, Amount);
+                });
+            });
+
+            Amount.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[2].firstElementChild.value = v.target.value / childs[1].firstChild.value;
+                    gstval(childs);
+                    totalVal(total, Amount);
+                });
+            });
+
+            Rate.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[3].firstElementChild.value = v.target.value * childs[1].firstChild.value;
+                    gstval(childs);
+                    totalVal(total, Amount);
+                });
+            });
+
+            cross.forEach((e, i) => {
+                e.addEventListener('click', v => {
+                    Amount = document.querySelectorAll('.a-val');
+                    total = document.querySelectorAll('.t-val');
+                    total[i].value = 0;
+                    Amount[i].value = 0;
+                    totalVal(total, Amount);
+                    v.target.parentElement.parentElement.parentElement.remove();
+                    updateRowDataArray(); // Update array when a row is removed
+                });
+            });
+
+            // updateRowDataArray(); // Update array when a new row is added
+        });
+
+        function updateRowDataArray() {
+            
+            rowDataArray = []; // Clear the array
+            let rows = document.querySelectorAll('.input-row');
+
+            rows.forEach(function (row, index) {
+                let rowData = {
+                    itemName: row.querySelector('.input-item').value,
+                    quantity: row.querySelector('.q-val').value,
+                    rate: row.querySelector('.r-val').value,
+                    amount: row.querySelector('.a-val').value,
+                    gst: row.querySelector('.gst-val').value,
+                    igst: row.querySelector('.igst-val').value,
+                    cgst: row.querySelector('.cgst-val').value,
+                    sgst: row.querySelector('.sgst-val').value,
+                    total: row.querySelector('.t-val').value
+                };
+
+                rowDataArray.push(rowData);
+
+                // console.log('Row ' + (index + 1) + ':', rowData);
+            });
+
+            console.log('All Row Data:', rowDataArray);
+        }
+
+
+
+        function gstval(param) {
+            let len = document.querySelectorAll('.q-val')
+            let tval;
+
+            if (len.length <= 1) {
+                let onePercent = Amount.value / 100
+                igst.value = onePercent * 18
+                cgst.value = onePercent * 9
+                sgst.value = onePercent * 9
+                tval = Number(Amount.value) + Number(cgst.value) + Number(sgst.value)
+                total.value = tval.toFixed(2).toString().split('.')[1] == '00' ? Math.floor(tval) : tval.toFixed(2)
+            } else {
+                if (param[3].firstElementChild.value >= 0) {
+                    let onePercent = param[3].firstChild.value / 100
+                    param[4].firstElementChild.value = (onePercent * 18).toFixed(2)
+                    param[5].firstElementChild.value = (onePercent * 9).toFixed(2)
+                    param[6].firstElementChild.value = (onePercent * 9).toFixed(2)
+                    param[7].firstElementChild.value = Number(param[3].firstChild.value) + Number(param[4].firstChild.value) + Number(param[5].firstChild.value)
+                }
+            }
+
+        }
+
+        let totalVal = (p1, p2) => {
+            let len = document.querySelectorAll('.t-val')
+            let Eval = 0
+            if (len.length <= 1) {
+                total.parentElement.classList.contains('d-none') ? Etotal.innerText = Amount.value : Etotal.innerText = total.value
+            } else {
+                if (taxEnable) {
+                    p1.forEach(e => e.parentElement.classList.contains('d-none') || !e.parentElement ? Eval = Eval : Eval = Eval + Number(e.value))
+                } else {
+                    p2.forEach(e => e.parentElement.classList.contains('d-none') ? Eval = Eval : Eval = Eval + Number(e.value))
+                }
+                Etotal.innerText = Eval.toFixed(2).toString().split('.')[1] == '00' ? Math.floor(Eval) : Eval.toFixed(2)
+            }
+        }
+
+        // tax
+
+        let gsttab = document.querySelector('.gst-tab');
+
+        taxselect.addEventListener('change', e => {
+            if (e.target.value == 1) {
+                gsttab.classList.remove('d-none');
+            } else {
+                gsttab.classList.add('d-none');
+            }
+        });
+
+        // tax end
+
+
+        // ===================================================  
+
+        $(document).ready(function () {
+
+            $('#add_note ').on('click', function () {
+                $('.text_editor').toggleClass('active');
+            });
+
+            $('#add_info ').on('click', function () {
+                $('.t_conditions').toggleClass('active');
+            });
+
+            var quill = new Quill('#editor', {
+                theme: 'snow'
+            });
+
+            $('#tab_1').on('click', function () {
+                $('#show_1').toggleClass('active')
+            });
+
+            $('#tab_2').on('click', function () {
+                $('#show_2').toggleClass('active')
+            });
+
+            $('#tab_3').on('click', function () {
+                $('#show_3').toggleClass('active')
+            });
+
+            $('#bank_tab').on('click', function () {
+                $('.bank').toggleClass('active')
+            })
+
+
+        });
+
+        function preview_images() {
+            var total_file = document.getElementById("images").files.length;
+            for (var i = 0; i < total_file; i++) {
+                $('#image_preview').append(`
+                    <div class=''>
+                        <img style='width:100%' class='img-responsive' src='${URL.createObjectURL(event.target.files[i])}'>
+                    </div>`);
+            }
+        }
+        function resetForm() {
+            $("#image_preview").html("");
+            return true;
+        }
+
+
+        //change
+        function saveDataAndContinue() {
+            var creditNoteNo = document.getElementById('invoice_no').value;
+            var creditInvoiceDate = document.getElementById('invoice_date').value;
+            var creditLinkInvoice = document.getElementById('link_invoice').value;
+            const creditClient = document.getElementById('client_business').innerHTML;
+
+            // Get the content of the text editor
+            console.log(creditNoteNo)
+
+
+            var dataToSave = {
+                creditNoteNo: creditNoteNo,
+                creditInvoiceDate: creditInvoiceDate,
+                creditLinkInvoice: creditLinkInvoice,
+                creditClient: creditClient,
+                paymentTable: paymentData,
+            };
+
+            var jsonData = JSON.stringify(dataToSave);
+            localStorage.setItem('dataKey', jsonData);
+        }
+
+
+    </script>
+
+</body>
+
+</html>

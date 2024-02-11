@@ -1,0 +1,169 @@
+{%include 'sidebar.html'%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Index</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+        body {
+            margin: 0;
+            max-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://img.freepik.com/free-vector/technology-concept-background_23-2148116640.jpg?size=626&ext=jpg&ga=GA1.1.961609578.1687610561&semt=ais');
+            /* Replace 'your_image_url.jpg' with the actual URL of your image */
+            background-size: cover;
+            transform: scaleX(-1);
+            /* Flip the background image horizontally */
+            z-index: -1;
+            /* Ensure the pseudo-element is behind the content */
+        }
+
+
+        .container-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin-top: 30px;
+        }
+
+        .transparent-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            max-width: 500px;
+            width: 100%;
+            padding: 35px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+            border-radius: 35px;
+        }
+
+        .box-left {
+            margin-left: 20px;
+            text-align: center;
+        }
+
+        .button___x {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #3A1078;
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #492bc4;
+        }
+
+        .fadeInDown {
+            animation-name: fadeInDown;
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, -100%, 0);
+            }
+
+            50% {
+                opacity: .5;
+                transform: translate3d(0, 20%, 0);
+            }
+
+            100% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-wrapper fadeInDown">
+        <div class="transparent-container">
+            <div class="box-left">
+                <div class="button___x">
+                    <button class="btn btn-primary btn-lg py-3 mb-2 px-4">X</button>
+                </div>
+
+                <div class="button___x my-2">
+                    <h6>XYZ</h6>
+                </div>
+
+                <div class="h8">
+                    <!-- Your existing content -->
+                    <div class="row m-0 border mb-3 p-3">
+                        <div class="col-md-2 mt-3">
+                            lll
+                        </div>
+                        <h5 class="col-md-10 text-danger">
+                            Your Profile Is Not Complete<br><br>
+                        </h5><br><br>
+                        <p class="d-flex m-auto mb-2">Descriptions and other basic details<br>are missing from your
+                            profile</p>
+                    </div>
+
+                    <div class="d-flex h7 mb-2">
+                        <p class=""><strong>Benefits of a Complete Profile</strong></p>
+                    </div>
+                    <div class="h8 mb-5">
+                        <ul class="ml-3">
+                            <li>Showcase your services to get discovered</li>
+                            <li>Get sales lead from Refrens marketplace</li>
+                            <li>Easily maintain your updated project</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="form">
+                        <div class="row">
+                            <!-- Additional form content if needed -->
+                        </div>
+                        <div class="btn btn-primary d-block h8">
+                            <a class="text-white" href="/profile_create">Complete Your Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

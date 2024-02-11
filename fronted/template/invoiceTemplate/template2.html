@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+    <link href="https://cdn.quilljs.com/1.1.6/quill.snow.css" rel="stylesheet">
+    <script src="static/js/ajax.js"></script>
+    <title>Credit Note</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+</head>
+<style>
+    body {
+        margin-top: 20px;
+        background: #21224d;
+    }
+
+
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(30, 46, 80, .09);
+        border-radius: 0.25rem;
+        box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    }
+
+
+
+    .left-container {
+        background-color: #dee2e6;
+        /* Light Gray background for the left container */
+        border: 1px solid #dee2e6;
+        /* Light Gray border */
+        border-radius: 0.25rem;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .left-container button {
+        margin-bottom: 10px;
+    }
+
+    .button-container {
+        text-align: center;
+    }
+
+    .button-container button {
+        margin-bottom: 10px;
+    }
+
+    .notes-container h4 {
+        color: rgb(125, 121, 227);
+    }
+
+    .notes-container p {
+        color: rgb(0, 0, 0);
+    }
+
+    .terms h4 {
+        color: rgb(125, 121, 227);
+    }
+
+    .terms p {
+        color: rgb(0, 0, 0);
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="row gutters">
+
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <!-- Left Container -->
+                <div class="left-container">
+                    <button class="btn btn-danger" onclick="goBack()">
+                        Back
+                    </button>
+                    <button class="btn btn-primary" onclick="downloadAsPDF()">
+                        <i class="fas fa-download mr-2"></i> Download
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print mr-2"></i> Print
+                    </button>
+                    
+                    <button class="btn btn-info" data-toggle="modal" data-target="#templateModal">
+                        <i class="fas fa-file mr-2"></i> Change Template
+                    </button>
+                </div>
+
+
+            </div>
+
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-12 ">
+                <div class="card downloadfromhere invoice-header">
+                    <div class="card-body p-4">
+                        <!-- Header -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3 style="color: purple;">Invoice</h3>
+                                <address class="text-left" style="font-size: 18px;">
+                                    Invoice No# <span id="invoiceNo"></span><br>
+                                    Invoice Date <span id="invoiceDate"></span><br>
+                                    Link Invoice <span id="link_invoice"></span>
+                                </address>
+                            </div>
+                            <div class="col-md-3" >
+                                <img style="border-radius: 10px;" src="../static/image/download.jpg"
+                                    alt="Logo" class="img-fluid">
+                            </div>
+                        </div>
+
+                        <!-- Row for Left and Right boxes below the header -->
+                        <div class="row mt-4">
+                            <!-- Left box -->
+                            <div class="col-md-6">
+                                <div class="container "
+                                    style="background-color: rgb(204, 204, 255); color: rgb(0, 0, 0); padding: 10px; border-radius: 5px;">
+                                    <!-- Left box content -->
+                                    <h5>Billed To (Client Details)</h5>
+                                </div>
+                            </div>
+
+                            <!-- Right box -->
+                            <div class="col-md-6">
+                                <div class="container"
+                                    style="background-color: rgb(204, 204, 255); color: rgb(0, 0, 0); padding: 10px;border-radius: 5px;">
+                                    <!-- Right box content -->
+                                    <h5>Billed To (Client Details)</h5>
+                                    <p><strong>Business details</strong></p>
+
+                                    {% for row in detail %}
+                                    <p>Business Name: {{ row.get('business_name') }}</p>
+                                    <p>Address: {{ row.get('address') }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <!-- Payment table -->
+                            <div class="col-md-12 mt-4">
+                                <div class="container"
+                                style=" color: rgb(0, 0, 0); padding: 10px;border-radius: 5px;">
+                                <table class="table">
+                                    <thead style="background-color: rgb(125, 121, 227); color: #fff;">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Payment Date</th>
+                                            <th scope="col">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody  style="background-color: rgb(204, 204, 255);">
+                                        <!-- Example row, replace with your data -->
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>2023-12-14</td>
+                                            <td>$100.00</td>
+                                        </tr> <tr>
+                                            <th scope="row">1</th>
+                                            <td>2023-12-14</td>
+                                            <td>$100.00</td>
+                                        </tr>
+                                        <!-- Add more rows dynamically based on your data -->
+                                    </tbody>
+                                </table>
+                            </div>
+                                <div class="row mt-4">
+                                    <!-- Left box -->
+                                    <div class="col-md-6">
+                                        <div class="container" <h4> Total (in Words) : Five Hundread</h4>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Right box -->
+                                    <div class="col-md-6 ">
+                                        <div class="container"
+                                            style="background-color: rgb(204, 204, 255); color: rgb(0, 0, 0); padding: 10px; border-radius: 5px;">
+                                            <h5>Total</h5>
+                                            <p>Total Amount: $500.00</p>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Notes container -->
+                                    <div class="col-md-6 mt-4">
+                                        <div class="container"
+                                            style=" color: rgb(0, 0, 0); padding: 10px;">
+                                            <h4 style=" color: purple;">Notes</h4>
+                                            <p>Your notes go here...</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Terms And Condition -->
+                                    <div class="col-md-12 mt-4">
+                                        <div class="container"
+                                            style=" color: rgb(0, 0, 0); padding: 10px;">
+                                            <h4 style=" color: purple;">Terms and Condition</h4>
+                                            <p>Your Terms And Condition go here...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- After the existing content -->
+    <!-- Modal -->
+    <div class="modal fade" id="templateModal" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="templateModalLabel">Choose a Template</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Template Options -->
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="template1">
+                                <img src="../static/image/pdf1.png" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="template2">
+                                <img src="../static/image/pdf3.png" class="img-fluid" alt="Template 2">
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="template3">
+                                <img src="../static/image/pdf2.png" class="img-fluid" alt="Template 3">
+                            </a>
+                        </div>
+                        <!-- Add more templates if needed -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    function selectTemplate(templateId) {
+        // You can apply logic based on the selected template
+        // For example, you can change the background or update the template-related styles
+
+        // Close the modal after selecting a template
+        $('#templateModal').modal('hide');
+    }
+
+    function changeTemplate() {
+        // Show the template modal
+        $('#templateModal').modal('show');
+    }
+
+    function downloadAsPDF() {
+        var element = document.querySelector('.downloadfromhere');
+        html2pdf(element);
+    }
+
+    
+
+    // let jsonData = localStorage.getItem('dataKey');
+
+    // if (jsonData) {
+    //     let retrievedData = JSON.parse(jsonData);
+
+    //     console.log(retrievedData);
+
+    //     let creditNoteNo = retrievedData.creditNoteNo;
+    //     let creditInvoiceDate = retrievedData.creditInvoiceDate;
+    //     let creditLinkInvoice = retrievedData.creditLinkInvoice;
+    //     let creditClient = retrievedData.creditClient;
+    //     console.log(creditClient);
+
+
+    //     let invoiceNameElement = document.getElementById('invoiceNo');
+    //     if (invoiceNameElement) {
+    //         invoiceNameElement.innerHTML = creditNoteNo;
+    //     }
+
+    //     let invoiceDateElement = document.getElementById('invoiceDate');
+    //     if (invoiceDateElement) {
+    //         invoiceDateElement.innerHTML = creditInvoiceDate;
+    //     }
+
+    //     let invoiceLinkElement = document.getElementById('link_invoice');
+    //     if (invoiceLinkElement) {
+    //         invoiceLinkElement.innerHTML = creditLinkInvoice;
+    //     }
+    //     let invoiceCredit = document.getElementById('bussiness_detail')
+    //     if (invoiceCredit) {
+    //         invoiceCredit.innerHTML = creditClient;
+    //     }
+
+
+    // } else {
+    //     console.log('No data found in localStorage.');
+    // }
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<script src="https://cdn.quilljs.com/1.1.6/quill.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="static/js/ajax.js"></script>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css">
+
+    <!-- <link rel="stylesheet" href="static/css/index.css"> -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Invoice2</title>
+</head>
+
+<style>
+    #wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #wrapper p {
+        font-size: 1.3rem;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .shadow {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+</style>
+
+<body>
+
+    <div class="container  mt-5">
+        <div class="row" id="wrapper">
+            <div class="col-lg-5  p-3 shadow">
+                <h5 class="text-center">Billed To (Client Details)</h5>
+
+                <div class="ms-5 pt-3 pb-3" id="details">
+                    <p class="text-center">Business details</p>
+                    <div class="mt-4 ml-4">
+                        <div class="d-flex">
+                            <h5 class="">Business Name: <h5 class="ml-4 bold">xyz</h5>
+                            </h5>
+                        </div>
+                        <div class="d-flex">
+                            <h5 class="">Address: <h5 class="ml-4 bold">xyz noida 62,india</h5>
+                            </h5>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-5  p-3 shadow">
+                <h5 class="text-center">Billed To (Client Details)</h5>
+
+                <div class="ms-5 pt-3 pb-3" id="details">
+                    <div class="mt-4 ml-4">
+                        <div class="d-flex">
+                            <h5 class="">Business Name: <h5 class="ml-4 bold">xyz</h5>
+                            </h5>
+                        </div>
+                        <div class="d-flex">
+                            <h5 class="">Address: <h5 class="ml-4 bold">xyz noida 62,india</h5>
+                            </h5>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+</div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

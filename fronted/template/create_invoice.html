@@ -1,0 +1,2062 @@
+{%include 'sidebar.html'%}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="static/js/ajax.js"></script>
+    <link href="https://cdn.quilljs.com/1.1.6/quill.snow.css" rel="stylesheet">
+
+    <title>Invoice</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+
+
+
+</head>
+
+<style>
+    body {
+        /* background-color: #ECECEC; */
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://img.freepik.com/free-vector/technology-concept-background_23-2148116640.jpg?size=626&ext=jpg&ga=GA1.1.961609578.1687610561&semt=ais');
+        /* Replace 'your_image_url.jpg' with the actual URL of your image */
+        background-size: cover;
+        transform: scaleX(-1);
+        /* Flip the background image horizontally */
+        z-index: -1;
+        /* Ensure the pseudo-element is behind the content */
+    }
+
+    .shadow {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border-radius: 10px;
+        background-color: #ffffff92;
+    }
+
+    .text_editor {
+        display: none;
+    }
+
+    .text_editor.active {
+        display: block;
+    }
+
+    .t_conditions {
+        display: none;
+    }
+
+    .t_conditions.active {
+        display: block;
+    }
+
+    form.example input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+    }
+
+    form.example button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: #2196F3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+    }
+
+    form.example button:hover {
+        background: #0b7dda;
+    }
+
+    form.example::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    #editor {
+        height: 130px;
+    }
+
+    .modal-content {
+        width: 200%;
+        margin-left: -15rem !important;
+        background: linear-gradient(to right, #aedeee, #e5a4af);
+        color: rgb(254, 254, 254);
+        border-radius: 20px;
+
+    }
+
+
+    .fa {
+        float: right;
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 1rem;
+    }
+
+    #show_1 {
+        display: none;
+    }
+
+    #show_1.active {
+        display: flex;
+    }
+
+    #show_2 {
+        display: none;
+    }
+
+    #show_2.active {
+        display: flex;
+    }
+
+    #show_3 {
+        display: none;
+    }
+
+    #show_3.active {
+        display: flex;
+    }
+
+    #uploadedImage {
+        height: 150px;
+        width: 35%;
+    }
+
+    .input-field {
+        margin: 19px 1rem;
+        border: none;
+        border-bottom: 1px solid #ced4da;
+        width: 33rem;
+    }
+
+    .input-item {
+        border: none;
+        border-bottom: 2px solid black;
+        outline: none;
+    }
+
+    .item {
+        border: none;
+        color: white;
+        background-color: none !important;
+        background: none !important;
+        outline: none;
+    }
+
+    .num {
+        border: none;
+        border-bottom: 1px solid black;
+    }
+
+    .num2 {
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+    }
+
+    #wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .bank {
+        display: none;
+    }
+
+    .bank.active {
+        display: block;
+    }
+
+    .Billed_size {
+        font-size: 1rem;
+    }
+
+    .weight {
+        font-weight: 600;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    #coustmers {
+        display: flex;
+    }
+
+
+
+    #invoice_save {
+        margin-top: 3rem;
+        margin-right: 1rem;
+        display: none;
+    }
+
+    .invoice {
+        border-radius: 20px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        padding: 20px
+    }
+
+    .invoice-company {
+        font-size: 20px
+    }
+
+    .invoice-header {
+        margin: 0 -20px;
+        background: #f0f3f4;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .invoice-date,
+    .invoice-from,
+    .invoice-to {
+        display: table-cell;
+        width: 1%
+    }
+
+    .invoice-from,
+    .invoice-to {
+        padding-right: 20px
+    }
+
+    .invoice-date .date,
+    .invoice-from strong,
+    .invoice-to strong {
+        font-size: 12px;
+        font-weight: 600
+    }
+
+    .invoice-date {
+        text-align: right;
+        padding-left: 20px
+    }
+
+    .invoice-price {
+        background: #f0f3f4;
+        display: table;
+        width: 100%;
+    }
+
+    .invoice-price .invoice-price-left,
+    .invoice-price .invoice-price-right {
+        display: table-cell;
+        padding: 20px;
+        font-size: 20px;
+        font-weight: 600;
+        width: 75%;
+        position: relative;
+        vertical-align: middle
+    }
+
+    .invoice-price .invoice-price-left .sub-price {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 0 20px
+    }
+
+    .invoice-price small {
+        font-size: 12px;
+        font-weight: 400;
+        display: block
+    }
+
+    .invoice-price .invoice-price-row {
+        display: table;
+        float: left
+    }
+
+    .invoice-price .invoice-price-right {
+        width: 25%;
+        background: #2d353c;
+        color: #fff;
+        font-size: 28px;
+        text-align: right;
+        vertical-align: bottom;
+        font-weight: 300
+    }
+
+    .invoice-price .invoice-price-right small {
+        display: block;
+        opacity: .6;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 12px
+    }
+
+    .invoice-footer {
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        font-size: 10px
+    }
+
+    .invoice-note {
+        color: #999;
+        margin-top: 80px;
+        font-size: 85%;
+        user-select: none;
+        pointer-events: none;
+    }
+
+    .invoice-content {
+        user-select: none;
+        pointer-events: none;
+    }
+
+    .invoice>div:not(.invoice-footer) {
+        margin-bottom: 20px
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        border: 2px solid #333;
+        border-radius: 5px;
+        margin: 10px;
+        color: #333;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #333;
+        color: #fff;
+        border-color: #fff;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+
+    /* .btn-white {
+            color: #fff;
+            background-color: #ffeded;
+        }
+
+        .btn-white:hover {
+            background-color: #fff;
+            color: #333;
+            border-color: #333;
+        } */
+
+    /* Additional styles for button size and spacing */
+    .btn-sm {
+        font-size: 12px;
+    }
+
+    .m-b-10 {
+        margin-bottom: 10px;
+    }
+
+    .p-l-5 {
+        padding-left: 5px;
+    }
+
+    #heading_payment {
+        border-radius: 5px;
+    }
+
+    .modalfade {
+        background: rgba(0, 0, 0, 0.511);
+    }
+
+    .fadeInDown {
+        animation-name: fadeInDown;
+        animation-duration: 1s;
+        animation-fill-mode: both;
+    }
+
+    @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            transform: translate3d(0, -100%, 0);
+        }
+
+        50% {
+            opacity: .5;
+            transform: translate3d(0, 20%, 0);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+</style>
+
+<body>
+
+
+    <section class="home">
+
+        <div class="container mt-5 mb-5 px-5 border border-2" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;"
+            id="coustmers">
+
+            <div class="row m-5">
+
+                <div class="col-md-12">
+
+                    <div class="card p-3 no-border-print">
+
+
+                        <div class="row">
+                            <span id="username" hidden>{{session.get('username')}}</span>
+
+
+                            <div class="col-md-6">
+
+                                <div class="inputbox mt-3 mr-2">
+                                    <p class="ms-2">Invoice No</p>
+                                    <select style="font-size: small;" name="invoice_option"
+                                        class="form-control no-border-print" id="invoice_option"
+                                        onchange="updateInvoiceInput()">
+                                        <!-- Add more predefined options as needed -->
+                                        <option value="" selected disabled style="display: none;"> Enter Your Invoice
+                                        </option>
+                                        <option value="other"
+                                            style="font-size: 18px; font-weight: bold; color: #0b7dda;">Create New
+                                            Invoice +</option>
+                                        <hr>
+                                        <option value="select_option">Select an option</option>
+                                        <option value="predefined_option_1">Predefined Option 1</option>
+                                        <option value="predefined_option_2">Predefined Option 2</option>
+                                    </select>
+                                    <input style="font-size: small; display: none;" type="text" name="custom_invoice"
+                                        class="form-control no-border-print mt-2" id="custom_invoice"
+                                        placeholder="Enter custom invoice number">
+                                </div>
+
+                                <div class="inputbox mt-3 mr-2">
+                                    <p class="ms-2">Invocie Date
+                                    </p>
+                                    <input style="font-size: small;" type="date" name="name"
+                                        class="form-control no-border-print" required="required" id="invoice_date">
+
+
+                                </div>
+
+                                <div class="inputbox mt-3 mr-2">
+                                    <p class="ms-2">Due Date </p>
+                                    <datalist id="suggestions">
+                                        <option>First option</option>
+                                        <option>Second Option</option>
+                                    </datalist>
+                                    <input style="font-size: small;" list="suggestions" type="date" name="name"
+                                        class="form-control no-border-print" required="required" id="due_date">
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+                                {%for data in detail: %}
+                                {%if data.get('thumbnail')| length>0%}
+                                <label style="display: none;">{{data.get('thumbnail')}}</label>
+                                <img id="image" src="{{data.get('thumbnail')}}" alt="Image"
+                                    style="height: 8rem; margin-left: 5rem; margin-top: 4rem;">
+                                {%else%}
+                                <div class="d-flex flex-row">
+
+                                    <form method="post" class="offset-md-2 col-md-8">
+                                        <div class="my-2">
+                                            <input type="file" class="" id="images" name="images" accept="image/*"
+                                                onchange="preview_images();" multiple />
+                                        </div>
+                                        <div>
+
+                                            <button onclick="return resetForm();" type="reset"
+                                                class="btn btn-danger no-print">Reset</button>
+                                            <button type="button" onclick="uploadImages()"
+                                                class="btn btn-primary">Upload</button>
+                                        </div>
+                                        <br>
+                                        <label for="images" id="image_preview"></label>
+
+
+                                    </form>
+                                    <br>
+
+                                </div>
+
+                                {%endif%}
+                                {%endfor%}
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="container  mt-5">
+                        <div class="row" id="wrapper">
+                            <div class="col-lg-5  p-3 shadow">
+                                <h5 class="text-center" id="billed_form">Billed To (Client Details)</h5>
+
+                                <div class="ms-5 pt-3 pb-3" id="details">
+                                    <p class="text-center">Business details</p>
+                                    <div class="mt-4 ml-4">
+                                        {%for row in detail: %}
+                                        <div class="d-flex">
+                                            <h5 class="">Business Name: <h5 class="ml-4 bold">
+                                                    {{row.get('bussiness_name')}}</h5>
+                                            </h5>
+                                        </div>
+                                        <div class="d-flex">
+                                            <h5 class="">Address: <h5 class="ml-4 bold">{{row.get('address')}}</h5>
+                                            </h5>
+                                        </div>
+                                        {%endfor%}
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-5  p-3 shadow">
+                                <h6 class="d-flex justify-content-center">Bill From
+                                    <p class="text-muted"></p>
+                                </h6>
+
+
+
+                                <div class="billed_2">
+                                    <div class="input-group d-flex justify-content-center">
+                                        <select class="form-control custom-select no-print" name="client"
+                                            style="width: 256px;" id="billed_to">
+                                            <option value=""></option>
+                                            {% for client in client: %}
+                                            <option value="{{client.get('Business_name')}}">
+                                                {{client.get('Business_name')}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+
+
+                                        <button type="button" class="btn mt-3 bg-primary text-white" id="search-button"
+                                            onclick="fetch_client()">search</button>
+                                    </div>
+
+                                    <div class="ms-5 pt-3 pb-3">
+                                        <div class="d-flex justify-content-between" id="details">
+                                            <p class="ml-4">Business details</p>
+                                            <button data-toggle="modal" data-target="#myModal"
+                                                class="btn bg-primary text-white">+ Add Client</button>
+                                        </div>
+                                        <div class="ml-4 Billed_size" id="client_business">
+                                            <div class="d-none mt-2">
+                                                <p class="fs-2">Business Name:</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.name</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">Address:</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.address</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">GST NO.</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.gstno</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">PAN NO.</p>
+                                                <p class="fs-2 ml-3 weight">businessDetail.panNo</p>
+                                            </div>
+                                            <div class="d-none">
+                                                <p class="fs-2">VAT NO.</p>
+                                                <p class="fs-2 ml-3 weight"></p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Button trigger modal -->
+                    <div class="row">
+                        <!-- <button type="button" class="btn btn-primary ml-3 mt-4" data-toggle="modal"
+                            data-target="#exampleModalCenter">
+                            %Add Tax
+                        </button> -->
+                        <button type="button" class="btn btn-primary ml-3 mt-4 no-print" data-toggle="modal"
+                            data-target="#exampleModalCenter">
+                            %Add Tax
+                        </button>
+                        <div class="mt-4 ml-5">
+                            <label class="mr-3" for="">Currency</label>
+                            <select id="selectBox" onchange="changeFunc()" class="form-select rounded p-2 no-print"
+                                aria-label="Default select example">
+                                <option value="1">India Rupee [INR]</option>
+                                <option value="2">US Dollar (USD $)</option>
+                                <option value="3">Euro [EURO]</option>
+                                <option value="4">British Pound Sterling [GBP]</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="container my-5">
+                        <div class="input-cont" id="payment_table">
+                            <div class="row bg-danger mx-1 justify-content-between text-white" id="heading_payment">
+                                <div class="d-flex">
+                                    <h6 class="py-3 pl-5">Item</h6>
+                                </div>
+                                <div class="d-flex justify-content-start  w-75 pl-2">
+                                    <div class="w-100 d-none">
+                                        <h6 class="py-3">GST</h6>
+                                    </div>
+                                    <div class="w-100">
+                                        <h6 class="py-3">Quantity</h6>
+                                    </div>
+                                    <div class="w-100">
+                                        <h6 class="py-3">Rate</h6>
+                                    </div>
+                                    <div class="w-100">
+                                        <h6 class="py-3">Amount</h6>
+                                    </div>
+                                    <div class="w-100 d-none">
+                                        <h6 class="py-3">IGST</h6>
+                                    </div>
+                                    <div class="w-100 d-none">
+                                        <h6 class="py-3">CGST</h6>
+                                    </div>
+                                    <div class="w-100 d-none">
+                                        <h6 class="py-3">SGST</h6>
+                                    </div>
+                                    <div class="w-100 d-none">
+                                        <h6 class="py-3">Total</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex text-center mt-3 input-row">
+                                <div class=""><input placeholder="item name [Required]" class="input-item form-control"
+                                        style="width: 220px;" type="text"></div>
+                                <div class="d-flex justify-content-around w-75">
+                                    <div class="w-100  d-none"><input placeholder="GST" value="18"
+                                            class="input-item form-control gst-val" type="number"></div>
+                                    <div class="w-100 "><input placeholder="Quantity"
+                                            class="input-item form-control q-val" type="number"></div>
+                                    <div class="w-100 "><input placeholder="Rate" class="input-item form-control r-val"
+                                            type="number">
+                                    </div>
+                                    <div class="w-100 "><input placeholder="Amount"
+                                            class="input-item form-control a-val" type="number">
+                                    </div>
+                                    <div class="w-100  d-none"><input placeholder="IGST"
+                                            class="input-item form-control igst-val" type="number"></div>
+                                    <div class="w-100  d-none "><input placeholder="CGST"
+                                            class="input-item form-control cgst-val" type="number"></div>
+                                    <div class="w-100  d-none"><input placeholder="SGST"
+                                            class="input-item form-control sgst-val" type="number"></div>
+                                    <div class="w-100  d-none"><input placeholder="Total"
+                                            class="input-item form-control t-val" type="number"></div>
+                                    <div class="mr-auto px-1 cross no-print">
+                                        <h3>&times;</h3>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Choose Taxation</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="row">
+
+                                        <select class="form-control tax-select mx-5"
+                                            aria-label="Default select example">
+                                            <option selected value="0">None</option>
+                                            <option class="" value="1">GST (India)</option>
+                                        </select>
+
+                                        <div class="gst-tab d-none">
+
+                                            <h6 class=" mt-4 mx-5">Gst Type <span class="text-danger">*</span></h6>
+
+                                            <div class="row ml-4">
+                                                <div class=" mt-4 col-lg-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="flexRadioDefault" id="flexRadioDefault1">
+                                                        <label class="form-check-label gst-tab1"
+                                                            for="flexRadioDefault1">
+                                                            IGST
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input gst-tab2" type="radio"
+                                                            name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                                        <label class="form-check-label" for="flexRadioDefault2">
+                                                            CGST & SGST
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-primary save-tax-btn"
+                                        id="save_content">Save
+                                        changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- modal end -->
+
+                    <div class="row">
+
+                        <div class="col-lg-7">
+
+                            <div class="">
+                                <button class="btn add_notes addnew-line" id="addnewline"><i
+                                        class="fa fa-bars mx-2 mt-1 mr-2" aria-hidden="true"></i>Add New Line
+                                </button>
+
+                                <button class="btn add_notes editor" id="add_note"><i class="fa fa-bars mx-2 mt-1 mr-2"
+                                        aria-hidden="true"></i>Add
+                                    Notes</button>
+
+                                <button class="btn add_notes  t_show button-to-remove" id="add_info"><i
+                                        class="fa fa-bars mr-2 mx-2 mt-1" aria-hidden="true"></i>Add
+                                    Additional Info</button>
+                                <br><br>
+
+                                <div class="text_editor">
+
+                                    <div id="editor" class="editor_value">
+
+                                    </div>
+                                </div>
+
+                                <div class=" shadow py-3 mt-5 t_conditions p-2" id="conditions">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label class="ml-3" for="Conditions">Terms and Conditions
+                                                <hr>
+                                                <button class="btn btn-primary" onclick="addInputOrLineBreak()">+ Add
+                                                    Row</button>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div id="inputContainer">
+                                        <div class="d-flex">
+                                            <label for="num" class="inputcount">1.</label>
+                                            <input type="text" class="num form-control px-4 ml-3 int-child"
+                                                style="max-width: 34rem;">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-5 shadow p-4">
+
+                            <h6><i class="fa fa-tag mr-1" aria-hidden="true"></i>Add Discounts/Additional Charges</h6>
+                            <hr>
+                            <div class="d-flex">
+                                <h2>Total<h2 class="future-clicked" id="future-clicked">[INR]</h2><i
+                                        class="fa fa-inr ml-5 t-amount" id="amount"></i></h2>
+                            </div>
+                            <hr>
+
+                        </div>
+                    </div>
+
+                    <div class="mt-4 mb-4 ">
+                        <button class="btn text-center btn-success px-3 button-to-remove"
+                            onclick="updateRowDataArray(); create_invoice();">Save
+                            & continue
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </section>
+
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content mx-auto">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Client</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="row m-2">
+                        <div class="col-lg-12">
+                            <label for="logo">Add Logo</label><br>
+                            <input type='file' class="mt-3 mb-3" id="readUrl">
+
+                            <img id="uploadedImage" src="#" class="m-4" alt="Uploaded Image"
+                                accept="image/png, image/jpeg" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="row mx-1">
+
+                        <div class="col-lg-6">
+                            <form>
+
+                                <label for="">Client's Business Name
+                                    <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control b-name" id="client">
+                                <br>
+                                <label for="">Client's Position
+                                    <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="Position">
+                                <br>
+                                <label for="s_country">Select Country
+                                    <span class="text-danger">*</span></label><br>
+                                <select class=" form-control form-select b-country" id="s_country"
+                                    aria-label="Default select example">
+                                    <option selected></option>
+                                    <option value="1">India</option>
+                                    <option value="2">Unnited Kingdom (Uk)</option>
+                                    <option value="2">United States of America (US)</option>
+                                    <option value="3">Germany</option>
+                                    <option value="3">Canada</option>
+                                </select>
+
+                            </form>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <form>
+
+                                <label for="">Client Industry
+                                </label>
+                                <input type="text" class="form-control" id="industry">
+
+                                <label for="" class="m-3">City
+                                </label>
+                                <input type="text" class="b-city form-control" id="city">
+
+
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- tax information -->
+
+                    <div class="row mx-1 mt-5" id="tax">
+                        <div class="col-lg-12">
+                            <h6>Tax Information <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_1" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="row mx-1" id="show_1">
+                        <div class="col-lg-6 my-4">
+                            <label for="" class="vat-label">GST Number</label>
+                            <div class="gamech" style="display: none;">
+                                <input type="text" class="vat-int">
+                                <button class="btn save-btn"> save </button>
+                            </div>
+                            <input type="text" class="form-control b-gst" id="gst">
+                        </div>
+                        <div class="col-lg-6 my-4">
+                            <label for="" class="vat-label">PAN Number</label>
+                            <div class="gamech" style="display: none;">
+                                <input type="text" class="vat-int">
+                                <button class="btn save-btn"> save </button>
+                            </div>
+                            <input type="text" class="form-control b-pan" id="pan">
+                        </div>
+                        <div class="col-lg-6 my-4">
+                            <label for="" class="vat-label">VAT Number</label>
+                            <div class="gamech" style="display: none;">
+                                <input type="text" class="vat-int ">
+                                <button class="btn save-btn"> save </button>
+                            </div>
+                            <input type="text" class="form-control b-vat" id="vat">
+                        </div>
+                    </div>
+
+                    <!-- tax information end -->
+
+                    <!-- address -->
+
+                    <div class="row mt-5 mx-1">
+                        <div class="col-lg-12">
+                            <h6>Address <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_2" aria-hidden="true"></i>
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <div class="row mx-1 my-4 b-address" id="show_2">
+
+                        <!-- <div class="col-lg-6">
+                            <label for="" class="">Select Country</label>
+                            <select class=" form-control form-select b-country" id=""
+                                aria-label="Default select example">
+                                <option selected></option>
+                                <option value="1">India</option>
+                                <option value="2">Unnited Kingdom (Uk)</option>
+                                <option value="2">United States of America (US)</option>
+                                <option value="3">Germany</option>
+                                <option value="3">Canada</option>
+                            </select>
+                            <br>
+                            <label for="" class="">City</label>
+                            <input type="text" class="form-control b-city" id="">
+                        </div> -->
+
+                        <div class="col-lg-6">
+                            <label for="" class="">State / Province</label>
+                            <input type="text" class="form-control" id="state">
+                            <br>
+                            <label for="" class="">Postal Code / Zip Code</label>
+                            <input type="text" class="form-control" id="zip">
+                        </div>
+
+                        <div class="col-lg-12 my-3">
+                            <label for="" class="">Street Address</label>
+                            <input type="text" class="form-control" id="steet">
+                        </div>
+
+                    </div>
+
+                    <!-- address end -->
+
+                    <!-- Additional Details -->
+
+                    <div class="row mt-5 mx-1">
+                        <div class="col-lg-12">
+                            <h6>Additional Details <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_3" aria-hidden="true"></i>
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <div class="row mx-1 my-4" id="show_3">
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Business Alias (Nick Name)</label>
+                            <input type="text" class="form-control" id="Nick">
+                            <br>
+                            <label for="" class="">Email</label>
+                            <input type="text" class="form-control" id="Email">
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Unique Key</label>
+                            <input type="text" class="form-control" id="Key">
+                            <br>
+
+                            <label for="" class="">Phone Number</label>
+                            <input type="text" class="form-control" list="Number" id="Number">
+                            <datalist id="Number">
+                                <option value="123456789">
+                                <option value="000000078">
+                            </datalist>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Additional Details end -->
+
+                    <!-- Bank Details -->
+
+                    <div class="row mx-1 my-4">
+                        <div class="col-lg-12">
+                            <div class="d-flex  justify-content-between">
+                                <h6 class="py-4">4. Bank Details</h6>
+                                <i id="bank_tab" aria-hidden="true" class="fa fa-angle-down angle py-4"></i>
+                            </div>
+
+                            <div class="bank">
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Account Holder Name</label>
+                                    <input type="text" placeholder="Account Holder Name" id="" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Account Number</label>
+                                    <input type="text" placeholder="Account Number" id="" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">IFSC</label>
+                                    <input type="text" placeholder="IFSC" id="" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">SWIFT</label>
+                                    <input type="text" placeholder="SWIFT" id="" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Bank</label>
+                                    <input type="text" placeholder="Bank" id="" class="form-control">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Bank Details End -->
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary save-billed" onclick="add_client()">Save</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- The Modal End -->
+
+
+
+
+
+    <div class="container" id="invoice_save">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="invoice">
+                    <!-- begin invoice-company -->
+                    <div class="invoice-company text-inverse f-w-600">
+                        <span class="pull-right hidden-print">
+                            <a class="btn btn-sm btn-white m-b-10 p-l-5"><i
+                                    class="fa fa-file t-plus-1 text-danger fa-fw fa-lg"></i> Download as
+                                PDF</a>
+                            <a class="btn btn-sm btn-white m-b-10 p-l-5" onclick="window.print()"><i
+                                    class="fa fa-print t-plus-1 fa-fw fa-lg"></i> Print</a>
+                        </span>
+                        <button type="button" class="btn btn-info" onclick="backToPage()">Back</button>
+
+                    </div>
+                    <div class="date text-inverse mt-2" id="invoice_logo">
+                        {%for data in detail: %}
+                        {%if data.get('thumbnail')| length>0%}
+                        <label style="display: none;">{{data.get('thumbnail')}}</label>
+                        <img id="image" src="{{data.get('thumbnail')}}" alt="Image" style="height: 5rem;">
+                        {%endif%}
+                        {%endfor%}
+                        <!-- <label for="images" id="image_preview"></label> -->
+                    </div>
+                    <!-- end invoice-company -->
+                    <!-- begin invoice-header -->
+                    <div class="invoice-header">
+                        <div class="invoice-from">
+                            <h5>Billed To (Client Details)</h5>
+                            <address class="m-t-5 m-b-5">
+                                <h6 class="text-inverse">Business details
+                                    <h6 />
+                                    {%for row in detail: %}
+                                    <h6 class="mt-3">Business Name: <h8 class="">
+                                            {{row.get('bussiness_name')}}</h8>
+                                    </h6>
+
+                                    <h6 class="">Address: <h8 class="">{{row.get('address')}}</h8>
+                                    </h6>
+                                    {%endfor%}
+                            </address>
+
+                        </div>
+                        <div class=" invoice-to">
+                            <h5>Billed To<small>(Client Details)</small></h5>
+                            <address class="m-t-5 m-b-5" id="userDetail">
+
+                            </address>
+                        </div>
+                        <div class="invoice-date">
+                            <h5>Invoice No</h5>
+                            <div class="date text-inverse m-t-5" id="invoice_detail"></div>
+                            <h5>Invocie Date</h5>
+                            <div class="date text-inverse m-t-5" id="Invocie_Date"></div>
+                            <h5>Due Date</h5>
+                            <div class="date text-inverse m-t-5" id="Invocie_Due_Date"></div>
+                        </div>
+                    </div>
+                    <!-- end invoice-header -->
+                    <!-- begin invoice-content -->
+                    <div class="invoice-content">
+                        <!-- begin table-responsive -->
+                        <div class="flex" id="table-content">
+
+                            <!-- PaymentTable -->
+
+                        </div>
+                        <!-- end table-responsive -->
+                        <!-- begin invoice-price -->
+                        <div class="invoice-price mt-2">
+                            <div class="invoice-price-left">
+
+
+                            </div>
+                            <div class="invoice-price-right">
+                                <small>TOTAL</small> <span class="f-w-600" id="total_amount">$4508.00</span>
+                            </div>
+                        </div>
+                        <!-- end invoice-price -->
+                    </div>
+                    <!-- end invoice-content -->
+                    <!-- begin invoice-note -->
+                    <div class="invoice-note">
+                        <h5>Note</h5>
+                        <div id="note_value">
+
+                        </div>
+                        <hr>
+                        <h5>Terms and Conditions</h5>
+                        <div id="termCondition">
+
+                        </div>
+                    </div>
+                    <!-- end invoice-note -->
+                    <!-- begin invoice-footer -->
+                    <!-- <div class="invoice-footer">
+                        <p class="text-center m-b-5 f-w-600">
+                            THANK YOU FOR YOUR BUSINESS
+                        </p>
+                        <p class="text-center">
+                            <span class="m-r-10"><i class="fa fa-fw fa-lg fa-globe"></i> matiasgallipoli.com</span>
+                            <span class="m-r-10"><i class="fa fa-fw fa-lg fa-phone-volume"></i>
+                                T:016-18192302</span>
+                            <span class="m-r-10"><i class="fa fa-fw fa-lg fa-envelope"></i> rtiemps@gmail.com</span>
+                        </p>
+                    </div> -->
+                    <!-- end invoice-footer -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script src="https://cdn.quilljs.com/1.1.6/quill.js"></script>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+
+        // add input feild
+        // let addlinebtn = document.querySelector('.addnew-line')
+        // let inputcont = document.querySelector('.input-cont')
+        // let inputrow = document.querySelector('.input-row')
+        // let Quantity = document.querySelector('.q-val')
+        // let Rate = document.querySelector('.r-val')
+        // let Amount = document.querySelector('.a-val')
+        // let total = document.querySelector('.t-amount')
+
+        // Quantity.addEventListener('keyup', e => {
+        //     let childs = e.target.parentElement.parentElement.children
+        //     childs[3].firstElementChild.value = childs[2].firstElementChild.value * e.target.value
+        //     // totalVal(Amount)
+        //     total.innerText = Amount.value
+
+        // })
+
+        // Rate.addEventListener('keyup', e => {
+        //     let childs = e.target.parentElement.parentElement.children
+        //     childs[3].firstElementChild.value = childs[1].firstElementChild.value * e.target.value
+        //     // totalVal(Amount)
+        //     total.innerText = Amount.value
+
+        // })
+
+        // Amount.addEventListener('keyup', v => {
+        //     let childs = v.target.parentElement.parentElement.children
+        //     childs[2].firstElementChild.value = childs[1].firstElementChild.value / v.target.value
+        //     total.innerText = Amount.value
+        // })
+
+        // addlinebtn.addEventListener('click', () => {
+        //     let newel = document.createElement('div')
+        //     newel.classList.add('row')
+        //     newel.classList.add('text-center')
+        //     newel.classList.add('mt-3')
+        //     newel.innerHTML = inputrow.innerHTML
+        //     inputcont.appendChild(newel)
+
+        //     Quantity = document.querySelectorAll('.q-val')
+        //     Rate = document.querySelectorAll('.r-val')
+        //     Amount = document.querySelectorAll('.a-val')
+
+        //     getval(Quantity, 3, 2)
+        //     getval(Rate, 3, 1)
+
+        //     Amount.forEach(e => {
+        //         e.addEventListener('keyup', v => {
+        //             let childs = v.target.parentElement.parentElement.children
+        //             childs[2].firstElementChild.value = childs[1].firstElementChild.value / v.target.value
+        //             totalVal(Amount)
+        //         })
+        //     });
+
+        // })
+
+        // let getval = (el, num, num2) => {
+        //     el.forEach(e => {
+        //         e.addEventListener('keyup', v => {
+        //             let childs = v.target.parentElement.parentElement.children
+        //             childs[num].firstElementChild.value = childs[num2].firstElementChild.value * v.target.value
+        //             totalVal(Amount)
+        //         })
+        //     });
+        // }
+
+        // let totalVal = (amt) => {
+        //     if (amt.length <= 1) {
+        //         total.innerText = amt.value
+        //     } else {
+        //         let val = 0
+        //         amt.forEach(e => {
+        //             val = Number(val) + Number(e.value)
+        //         })
+        //         total.innerText = Number(val)
+        //     }
+        // }
+
+        function addInputOrLineBreak() {
+            let container = document.querySelector('#inputContainer')
+            let containerhtml = container.firstElementChild.innerHTML
+            let inputdiv = document.createElement('div')
+            inputdiv.classList.add('d-flex')
+            inputdiv.innerHTML = containerhtml
+            container.appendChild(inputdiv)
+            let label = document.querySelectorAll('.inputcount')
+            label.forEach((e, i) => { e.innerText = `${i + 1}.` })
+        }
+
+        // var inputCount = 1;
+
+        // function addInputOrLineBreak() {
+        //     // Create either an input element or a line break
+        //     var element;
+        //     if (inputCount % 2 === 0) {
+        //         element = document.createElement("br");
+        //     } else {
+        //         var input = document.createElement("input");
+        //         input.type = "text";
+        //         input.name = "inputField" + inputCount;
+        //         input.placeholder = "";
+        //         input.classList.add("input-field"); // Add the CSS class to the input element
+        //         element = input;
+        //     }
+
+        //     // Append the element to the container
+        //     var container = document.getElementById("inputContainer");
+        //     container.appendChild(element);
+
+        //     // Increment the inputCount
+        //     inputCount++;
+        // }
+
+        // // add input feild end
+
+        document.getElementById('readUrl').addEventListener('change', function () {
+            if (this.files[0]) {
+                var picture = new FileReader();
+                picture.readAsDataURL(this.files[0]);
+                picture.addEventListener('load', function (event) {
+                    document.getElementById('uploadedImage').setAttribute('src', event.target.result);
+                    document.getElementById('uploadedImage').style.display = 'block';
+                });
+            }
+        });
+
+        // // 
+        // let vatLabel = document.querySelector('.vat-label')
+        // let vat_int = document.querySelector('.vat-int')
+        // let game = document.querySelector('.gamech')
+        // let saveBtn = document.querySelector('.save-btn')
+
+        // vatLabel.addEventListener('click', (e) => {
+        //     e.target.style.display = 'none'
+        //     game.style.display = 'block'
+        //     vat_int.value = e.target.innerText
+        // })
+
+        // saveBtn.addEventListener('click', () => {
+        //     if (vat_int.value == '') {
+        //         vatLabel.innerText = 'Vat Number'
+        //         vatLabel.style.display = 'block'
+        //         game.style.display = 'none'
+        //     } else {
+        //         vatLabel.style.display = 'block'
+        //         game.style.display = 'none'
+        //         vatLabel.innerText = vat_int.value
+        //     }
+        // })
+
+        // ====================================================
+
+        // total text chenge
+
+        function changeFunc() {
+            var selectedValue = document.getElementById('selectBox');
+            console.log(selectedValue.value)
+            if (selectedValue.value == '1') {
+                Etotal.classList.remove('fa-usd')
+                Etotal.classList.remove('fa-eur')
+                Etotal.classList.remove('fa-gbp')
+                Etotal.classList.add('fa-inr')
+                document.getElementById('future-clicked').innerText = '[INR]';
+            }
+            else if (selectedValue.value == '2') {
+                document.getElementById('future-clicked').innerText = '[USD]';
+                Etotal.classList.remove('fa-inr')
+                Etotal.classList.remove('fa-eur')
+                Etotal.classList.remove('fa-gbp')
+                Etotal.classList.add('fa-usd')
+                console.log(document.getElementById('future-clicked'))
+            }
+            else if (selectedValue.value == '3') {
+                Etotal.classList.remove('fa-usd')
+                Etotal.classList.remove('fa-gbp')
+                Etotal.classList.remove('fa-inr')
+                Etotal.classList.add('fa-eur')
+                document.getElementById('future-clicked').innerText = '[EURO]';
+            }
+            else if (selectedValue.value == '4') {
+                Etotal.classList.remove('fa-eur')
+                Etotal.classList.remove('fa-usd')
+                Etotal.classList.remove('fa-inr')
+                Etotal.classList.add('fa-gbp')
+                document.getElementById('future-clicked').innerText = '[GBP]';
+            }
+        }
+
+
+        // total text chenge end
+
+        function ExportToExcel(type, fn, dl) {
+            var elt = document.getElementById('example');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ?
+                XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+        }
+
+        let addlinebtn = document.querySelector('.addnew-line')
+        let inputcont = document.querySelector('.input-cont')
+        let inputrow = document.querySelector('.input-row')
+        let Quantity = document.querySelector('.q-val')
+        let Rate = document.querySelector('.r-val')
+        let Amount = document.querySelector('.a-val')
+        let igst = document.querySelector('.igst-val')
+        let cgst = document.querySelector('.cgst-val')
+        let sgst = document.querySelector('.sgst-val')
+        let total = document.querySelector('.t-val')
+        let Etotal = document.querySelector('.t-amount')
+        let cross = document.querySelector('.cross')
+        let savetaxbtn = document.querySelector('.save-tax-btn')
+        let igstcheckB = document.querySelector('#flexRadioDefault1')
+        let cgstcheckB = document.querySelector('#flexRadioDefault2')
+        let taxselect = document.querySelector('.tax-select')
+        let saveBilledBtn = document.querySelector('.save-billed')
+        let sCountry = document.querySelectorAll('.b-country')
+        let sCountryVal = ''
+        let taxEnable = false
+        let bcity = document.querySelectorAll('.b-city')
+
+        bcity.forEach(e => e.addEventListener('keyup', (v) => {
+            bcity.forEach(g => g.value = v.target.value)
+        }))
+
+        sCountry.forEach(e => e.addEventListener('change', (v) => {
+            sCountry.forEach(g => g.options[v.target.selectedIndex].selected = true)
+            sCountryVal = v.target.options[v.target.selectedIndex].text
+        }))
+
+        saveBilledBtn.addEventListener('click', clientsDetails)
+
+        function clientsDetails() {
+            let bname = document.querySelector('.b-name')
+            let baddress = document.querySelector('.b-address')
+            let bgst = document.querySelector('.b-gst')
+            let bpan = document.querySelector('.b-pan')
+            let bvat = document.querySelector('.b-vat')
+            let clientD = document.querySelector('.billed_2').querySelector('.Billed_size').children
+
+            for (const x in clientD) {
+                if (x == 0) {
+                    if (bname.value != "") {
+                        clientD[x].classList.replace('d-none', 'd-flex')
+                        clientD[x].lastElementChild.innerText = bname.value
+                    } else {
+                        clientD[x].classList.replace('d-flex', 'd-none')
+                    }
+                }
+
+                if (x == 1) {
+                    let binpt = baddress.querySelectorAll('input')
+                    let val = ''
+                    for (const v in binpt) {
+                        if (v == 3) {
+                            binpt[v].value != '' ? val = binpt[v].value + ' ' + val : val = val
+                            break;
+                        } else if (v == 2) {
+                            sCountryVal != "" ? val = val + sCountryVal + ' ' : val = val
+                            binpt[v].value != '' ? val = val + binpt[v].value + ' ' : val = val
+                            continue
+                        }
+                        else {
+                            binpt[v].value != '' ? val = val + binpt[v].value + ' ' : val = val
+                        }
+                    }
+
+                    if (val != '') {
+                        clientD[x].classList.replace('d-none', 'd-flex')
+                        clientD[x].lastElementChild.innerText = val
+                    } else {
+                        clientD[x].classList.replace('d-flex', 'd-none')
+                    }
+                }
+
+                if (x == 2) {
+                    if (bgst.value != '') {
+                        clientD[x].classList.replace('d-none', 'd-flex')
+                        clientD[x].lastElementChild.innerText = bgst.value
+                    } else {
+                        clientD[x].classList.replace('d-flex', 'd-none')
+                    }
+                }
+
+                if (x == 3) {
+                    if (bpan.value != "") {
+                        clientD[x].classList.replace('d-none', 'd-flex')
+                        clientD[x].lastElementChild.innerText = bpan.value
+                    } else {
+                        clientD[x].classList.replace('d-flex', 'd-none')
+                    }
+                }
+
+                if (x == 4) {
+                    if (bvat.value != "") {
+                        clientD[x].classList.replace('d-none', 'd-flex')
+                        clientD[x].lastElementChild.innerText = bvat.value
+                    } else {
+                        clientD[x].classList.replace('d-flex', 'd-none')
+                    }
+                }
+            }
+        }
+
+        savetaxbtn.addEventListener('click', e => {
+            let childs = inputcont.firstElementChild.lastElementChild.querySelectorAll('div')
+            let inputchilds = inputrow.lastElementChild.querySelectorAll('div')
+            let igstall = document.querySelectorAll('.igst-val')
+            let cgstall = document.querySelectorAll('.cgst-val')
+            let sgstall = document.querySelectorAll('.sgst-val')
+            let gstall = document.querySelectorAll('.gst-val')
+            let total = document.querySelectorAll('.t-val')
+            if (taxselect.value == 1) {
+                if (cgstcheckB.checked) {
+                    taxEnable = true
+                    cgstall.forEach((e, i) => {
+                        childs[0].classList.remove('d-none')
+                        childs[4].classList.add('d-none')
+                        childs[5].classList.remove('d-none')
+                        childs[6].classList.remove('d-none')
+                        childs[7].classList.remove('d-none')
+                        gstall[i].parentElement.classList.remove('d-none')
+                        igstall[i].parentElement.classList.add('d-none')
+                        cgstall[i].parentElement.classList.remove('d-none')
+                        sgstall[i].parentElement.classList.remove('d-none')
+                        total[i].parentElement.classList.remove('d-none')
+                    })
+                } else if (igstcheckB.checked) {
+                    taxEnable = true
+                    igstall.forEach((e, i) => {
+                        childs[0].classList.remove('d-none')
+                        childs[4].classList.remove('d-none')
+                        childs[5].classList.add('d-none')
+                        childs[6].classList.add('d-none')
+                        childs[7].classList.remove('d-none')
+                        gstall[i].parentElement.classList.remove('d-none')
+                        igstall[i].parentElement.classList.remove('d-none')
+                        cgstall[i].parentElement.classList.add('d-none')
+                        sgstall[i].parentElement.classList.add('d-none')
+                        total[i].parentElement.classList.remove('d-none')
+                    })
+                }
+            } else {
+                taxEnable = false
+                gstall.forEach((e, i) => {
+                    igstall[i].parentElement.classList.add('d-none')
+                    cgstall[i].parentElement.classList.add('d-none')
+                    sgstall[i].parentElement.classList.add('d-none')
+                    gstall[i].parentElement.classList.add('d-none')
+                    total[i].parentElement.classList.add('d-none')
+                })
+                childs.forEach((e, i) => {
+                    i == 0 || i == 4 || i == 7 ? childs[i].classList.add('d-none') : '';
+                    i == 0 || i == 4 || i == 7 ? inputchilds[i].classList.add('d-none') : '';
+                    i == 5 || i == 6 ? childs[i].classList.add('d-none') : '';
+                    i == 5 || i == 6 ? inputchilds[i].classList.add('d-none') : '';
+                })
+            }
+        })
+
+        Quantity.addEventListener('keyup', e => {
+            Amount.value = e.target.value * Rate.value
+            gstval()
+            totalVal()
+        })
+
+        Rate.addEventListener('keyup', e => {
+            Amount.value = e.target.value * Quantity.value
+            gstval()
+            totalVal()
+        })
+
+        Amount.addEventListener('keyup', v => {
+            Rate.value = Amount.value / Quantity.value
+            gstval()
+            totalVal()
+        })
+
+        let rowDataArray = [];
+
+        document.getElementById('addnewline').addEventListener('click', () => {
+            let newel = document.createElement('div');
+            newel.classList.add('d-flex', 'text-center', 'mt-3', 'input-row');
+            newel.innerHTML = inputrow.innerHTML;
+            inputcont.appendChild(newel);
+
+            let Quantity = document.querySelectorAll('.q-val');
+            let Rate = document.querySelectorAll('.r-val');
+            let Amount = document.querySelectorAll('.a-val');
+            let total = document.querySelectorAll('.t-val');
+            let cross = document.querySelectorAll('.cross');
+
+            Quantity.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[3].firstElementChild.value = v.target.value * childs[2].firstChild.value;
+                    gstval(childs);
+                    totalVal(total, Amount);
+                });
+            });
+
+            Amount.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[2].firstElementChild.value = v.target.value / childs[1].firstChild.value;
+                    gstval(childs);
+                    totalVal(total, Amount);
+                });
+            });
+
+            Rate.forEach(e => {
+                e.addEventListener('keyup', v => {
+                    let childs = v.target.parentElement.parentElement.children;
+                    childs[3].firstElementChild.value = v.target.value * childs[1].firstChild.value;
+                    gstval(childs);
+                    totalVal(total, Amount);
+                });
+            });
+
+            cross.forEach((e, i) => {
+                e.addEventListener('click', v => {
+                    Amount = document.querySelectorAll('.a-val');
+                    total = document.querySelectorAll('.t-val');
+                    total[i].value = 0;
+                    Amount[i].value = 0;
+                    totalVal(total, Amount);
+                    v.target.parentElement.parentElement.parentElement.remove();
+                    updateRowDataArray(); // Update array when a row is removed
+                });
+            });
+
+            // updateRowDataArray(); // Update array when a new row is added
+        });
+
+        function updateRowDataArray() {
+            rowDataArray = []; // Clear the array
+            let rows = document.querySelectorAll('.input-row');
+
+            rows.forEach(function (row, index) {
+                let rowData = {
+                    itemName: row.querySelector('.input-item').value,
+                    quantity: row.querySelector('.q-val').value,
+                    rate: row.querySelector('.r-val').value,
+                    amount: row.querySelector('.a-val').value,
+                    gst: row.querySelector('.gst-val').value,
+                    igst: row.querySelector('.igst-val').value,
+                    cgst: row.querySelector('.cgst-val').value,
+                    sgst: row.querySelector('.sgst-val').value,
+                    total: row.querySelector('.t-val').value
+                };
+
+                rowDataArray.push(rowData);
+
+                // console.log('Row ' + (index + 1) + ':', rowData);
+            });
+
+            console.log('All Row Data:', rowDataArray);
+        }
+
+
+        function gstval(param) {
+            let len = document.querySelectorAll('.q-val')
+            let tval;
+
+            if (len.length <= 1) {
+                let onePercent = Amount.value / 100
+                igst.value = onePercent * 18
+                cgst.value = onePercent * 9
+                sgst.value = onePercent * 9
+                tval = Number(Amount.value) + Number(cgst.value) + Number(sgst.value)
+                total.value = tval.toFixed(2).toString().split('.')[1] == '00' ? Math.floor(tval) : tval.toFixed(2)
+            } else {
+                if (param[3].firstElementChild.value >= 0) {
+                    let onePercent = param[3].firstChild.value / 100
+                    param[4].firstElementChild.value = (onePercent * 18).toFixed(2)
+                    param[5].firstElementChild.value = (onePercent * 9).toFixed(2)
+                    param[6].firstElementChild.value = (onePercent * 9).toFixed(2)
+                    param[7].firstElementChild.value = Number(param[3].firstChild.value) + Number(param[4].firstChild.value) + Number(param[5].firstChild.value)
+                }
+            }
+        }
+
+        let totalVal = (p1, p2) => {
+            let len = document.querySelectorAll('.t-val')
+            let Eval = 0
+            if (len.length <= 1) {
+                total.parentElement.classList.contains('d-none') ? Etotal.innerText = Amount.value : Etotal.innerText = total.value
+            } else {
+                if (taxEnable) {
+                    p1.forEach(e => e.parentElement.classList.contains('d-none') || !e.parentElement ? Eval = Eval : Eval = Eval + Number(e.value))
+                } else {
+                    p2.forEach(e => e.parentElement.classList.contains('d-none') ? Eval = Eval : Eval = Eval + Number(e.value))
+                }
+                Etotal.innerText = Eval.toFixed(2).toString().split('.')[1] == '00' ? Math.floor(Eval) : Eval.toFixed(2)
+            }
+        }
+
+        // tax
+
+        let gsttab = document.querySelector('.gst-tab');
+
+        taxselect.addEventListener('change', e => {
+            if (e.target.value == 1) {
+                gsttab.classList.remove('d-none');
+            } else {
+                gsttab.classList.add('d-none');
+            }
+        });
+        // tax end
+
+
+        // ===================================================  
+
+        $(document).ready(function () {
+
+            $('#add_note ').on('click', function () {
+                $('.text_editor').toggleClass('active');
+            });
+
+            $('#add_info ').on('click', function () {
+                $('.t_conditions').toggleClass('active');
+                console.log('connected')
+
+            });
+
+            var quill = new Quill('#editor', {
+                theme: 'snow'
+            });
+
+            $('#tab_1').on('click', function () {
+                $('#show_1').toggleClass('active')
+            });
+
+            $('#tab_2').on('click', function () {
+                $('#show_2').toggleClass('active')
+            });
+
+            $('#tab_3').on('click', function () {
+                $('#show_3').toggleClass('active')
+            });
+
+            $('#bank_tab').on('click', function () {
+                $('.bank').toggleClass('active')
+            })
+
+
+        });
+
+        function preview_images() {
+            var total_file = document.getElementById("images").files.length;
+            for (var i = 0; i < total_file; i++) {
+                $('#image_preview').append(`
+                    <div class=''>
+                        <img style='width:100%' class='img-responsive' src='${URL.createObjectURL(event.target.files[i])}'>
+                    </div>`);
+            }
+        }
+        function resetForm() {
+            $("#image_preview").html("");
+            return true;
+        }
+
+
+        function saveFormAsPDF() {
+            var element = document.getElementById('coustmers');
+
+            html2pdf().set({
+                filename: 'page.pdf',
+                margin: [3, 3, 3, 3],
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 0, // Set the width to match the element width
+                    windowHeight: 0 // Set the height to match the element height
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(element).save();
+        }
+
+        //         function saveFormAsPDF() {
+        //   var element = document.getElementById('coustmers');
+
+        //   // Exclude the button element from the HTML content
+        //   var clonedElement = element.cloneNode(true);
+        //   var buttonToRemove = clonedElement.querySelector('.button-to-remove');
+        //   if (buttonToRemove) {
+        //     buttonToRemove.remove();
+        //   }
+
+        //   html2pdf().set({
+        //     filename: 'page.pdf',
+        //     margin: [0, 0, 0, 0],
+        //     image: { type: 'jpeg', quality: 1 },
+        //     html2canvas: {
+        //       scale: 2,
+        //       useCORS: true,
+        //       scrollX: 0,
+        //       scrollY: 0,
+        //       windowWidth: element.offsetWidth,
+        //       windowHeight: element.offsetHeight
+        //     },
+        //     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        //   }).from(clonedElement).save();
+        // }
+
+
+        function clonePaymentTable() {
+            const paymentTable = document.getElementById('payment_table');
+            const input_cont = document.getElementById('table-content')
+
+
+            // Clone the payment_table div and its content
+            const clonedPaymentTable = paymentTable.cloneNode(true);
+
+            // Remove the IDs to avoid duplicate IDs in the cloned content
+            clonedPaymentTable.removeAttribute('id');
+
+            // Make the cloned content non-editable
+            clonedPaymentTable.setAttribute('contentEditable', 'false');
+
+
+            // Remove all elements with class "cross" from the cloned content
+            const crossElements = clonedPaymentTable.querySelectorAll('.cross');
+            crossElements.forEach((crossElement) => {
+                crossElement.remove();
+            });
+
+            // Append the cloned content to the output div
+            input_cont.innerHTML = '';
+            input_cont.appendChild(clonedPaymentTable);
+        }
+
+
+
+        function cloneTermondition() {
+            const getContainer = document.getElementById('inputContainer');
+            const inputTermCondiotion = document.getElementById('termCondition');
+
+
+            // Clone the inputContainer div and its content
+            const clonedInputContainer = getContainer.cloneNode(true);
+
+            // Remove the IDs to avoid duplicate IDs in the cloned content
+            clonedInputContainer.removeAttribute('id');
+
+            function makeNonEditable(element) {
+                element.setAttribute('contentEditable', 'false');
+                const children = element.children;
+                for (let i = 0; i < children.length; i++) {
+                    makeNonEditable(children[i]);
+                }
+            }
+
+            // Make all elements inside the cloned container non-editable
+            makeNonEditable(clonedInputContainer);
+
+            // Append the cloned content to the output div
+            inputTermCondiotion.innerHTML = '';
+            inputTermCondiotion.appendChild(clonedInputContainer);
+        }
+
+
+
+
+        function toggle_PDF() {
+            let printElement = document.getElementById('invoice_save');
+            if (printElement.style.display = 'none') {
+                printElement.style.display = 'flex';
+            } else {
+                printElement.style.display == 'none';
+            }
+
+            const hidecoustmers = document.getElementById('coustmers')
+
+            if (hidecoustmers.style.display = 'flex') {
+                hidecoustmers.style.display = 'none';
+            } else {
+                hidecoustmers.style.display == 'flex';
+            }
+
+            //Invoice_Number
+            const inputValue = document.getElementById('invoice_no').value;
+            const detailElement = document.getElementById('invoice_detail');
+            detailElement.innerHTML = inputValue;
+
+            //Invoice_Date
+            const getDate = document.getElementById('invoice_date').value
+            const inputDate = document.getElementById('Invocie_Date')
+            inputDate.innerHTML = getDate;
+
+            //Invoice_DueDate
+            const getDueDate = document.getElementById('due_date').value
+            const inputDueDate = document.getElementById('Invocie_Due_Date')
+            inputDueDate.innerHTML = getDueDate
+
+            //Invoice_Businessname 
+            const input_client = document.getElementById('client_business').innerHTML
+            const get_client = document.getElementById('userDetail')
+            get_client.innerHTML = input_client
+
+            // totalamount
+            const get_amount = document.getElementById('amount').innerText
+            const input_amount = document.getElementById('total_amount')
+            input_amount.innerHTML = get_amount
+
+
+
+            //Payement Table
+            clonePaymentTable();
+
+
+
+
+            //Note
+            const getTerm = document.querySelector('.editor_value').textContent;
+            const inputcondition = document.getElementById('note_value')
+            inputcondition.innerHTML = getTerm
+
+            //TermCondition
+            cloneTermondition()
+
+            //Logo
+            const get_image = document.getElementById('image_preview').innerHTML
+            const input_image = document.getElementById('invoice_logo')
+            input_image.innerHTML = get_image;
+            input_image.style.width = '20%';
+
+
+
+        }
+
+
+
+        // PDF_button
+        const exportBtn = document.querySelector('.btn.btn-sm.btn-white.m-b-10.p-l-5');
+        exportBtn.addEventListener('click', function () {
+
+            const hidecoustmers = document.getElementById('coustmers')
+
+
+            if (hidecoustmers.style.display = 'none') {
+                hidecoustmers.style.display = 'flex';
+            } else {
+                hidecoustmers.style.display = 'none';
+            }
+
+
+
+            var invoiceCompanyDiv = document.querySelector('.invoice-company');
+            invoiceCompanyDiv.style.display = 'none';
+
+
+            // Create a new jsPDF instance
+            var element = document.getElementById('invoice_save');
+            html2pdf().set({
+                filename: 'page.pdf',
+                margin: [0, 0, 0, 0],
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 1500, // Set the width to match the element width
+                    windowHeight: 0 // Set the height to match the element height
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(element).save();
+            var element = document.getElementById('invoice_save');
+
+            // Remove the element from the DOM
+            element.parentNode.removeChild(element);
+        });
+
+
+        function uploadImages() {
+            var files = document.getElementById("images").files;
+            var formData = new FormData();
+
+            for (var i = 0; i < files.length; i++) {
+                formData.append("images", files[i]);
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/upload", true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert("Images uploaded successfully!");
+                } else {
+                    alert("Image upload failed. Please try again.");
+                }
+
+            };
+            xhr.send(formData);
+
+        }
+
+
+        //Back
+        function backToPage() {
+            const hidecoustmers = document.getElementById('coustmers')
+            if (hidecoustmers.style.display = 'none') {
+                hidecoustmers.style.display = 'flex';
+            } else {
+                hidecoustmers.style.display = 'none';
+            }
+
+            let printElement = document.getElementById('invoice_save');
+            if (printElement.style.display = 'flex') {
+                printElement.style.display = 'none';
+            } else {
+                printElement.style.display == 'flex';
+            }
+
+        }
+
+        function updateInvoiceInput() {
+            var selectElement = document.getElementById("invoice_option");
+            var customInput = document.getElementById("custom_invoice");
+
+            if (selectElement.value === "other") {
+                customInput.style.display = "block";
+                customInput.setAttribute("required", "required");
+            } else {
+                customInput.style.display = "none";
+                customInput.removeAttribute("required");
+            }
+        }
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>

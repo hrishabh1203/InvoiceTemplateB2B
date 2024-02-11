@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="static/js/ajax.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: sans-serif;
+            line-height: 1.4;
+            display: flex;
+            background: none;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: #fff;
+            /* Light text color */
+        }
+
+        section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.thisiscolossal.com/wp-content/uploads/2018/11/HenriPrestes_02.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('http://pngimg.com/uploads/rain/rain_PNG13468.png');
+            animation: rain 0.19s ease-in infinite;
+            z-index: -2;
+        }
+
+        @keyframes rain {
+            0% {
+                background-position: 10% 0;
+            }
+
+            100% {
+                background-position: 20% 80%;
+            }
+        }
+
+        .container {
+            width: 700px;
+            margin: auto;
+            padding: 10px 48px 10px 48px;
+            border-radius: 11px;
+            position: relative;
+            text-align: center;
+            z-index: 1;
+            animation: fadeInDown 1s ease-out;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0; 
+            background: none;
+        }
+
+        .container.fadeIn {
+            opacity: 1; /* Change opacity to 1 for fade-in effect */
+        }
+
+        .login-title {
+            padding: 15px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #eee;
+            /* Light text color */
+        }
+
+        .login-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            row-gap: 2px;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 9px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            color: #333;
+            /* Darker text color for input */
+            transition: border-color 0.3s;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #f48982;
+            box-shadow: 0 0 0 4px rgba(253, 242, 233, 0.2);
+        }
+
+        .btn--form {
+            background-color: #f48982;
+            align-self: end;
+            padding: 12px;
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn--form:hover {
+            background-color: #d36d66;
+        }
+
+        .login {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .login a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 14px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .login a:hover {
+            color: #1d5ca8;
+        }
+
+        hr {
+            margin-top: 20px;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        .Ac {
+            color: #3498db !important;
+            text-decoration: block;
+        }
+
+        .forget {
+            color: #e74c3c !important;
+            font-weight: bold;
+        }
+
+        .fadeInDown {
+            animation-name: fadeInDown;
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, -100%, 0);
+            }
+
+            50% {
+                opacity: .5;
+                transform: translate3d(0, 20%, 0);
+            }
+
+            100% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section></section>
+
+    <div class="container fadeIn">
+        <h2 class="login-title">Signup</h2>
+
+        <form method="post" class="login-form">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div>
+                        <label for="business" class="p-2">Business Name </label>
+                        <input id="business_name" type="text" placeholder="" name="business" required />
+                    </div>
+
+                    <div>
+                        <label for="password" class="p-2">Password </label>
+                        <input id="password" type="password" placeholder="" name="password" required />
+                    </div>
+
+                    <div>
+                        <label for="address" class="p-2">Address</label>
+                        <input id="address" type="text" placeholder="" name="address" required />
+                    </div>
+
+                    <div>
+                        <label for="email" class="p-2">Email</label>
+                        <input id="email" type="email" placeholder="" name="email" required />
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div>
+                        <label for="name" class="p-2">User Name </label>
+                        <input id="name" type="text" placeholder="" name="name" required />
+                    </div>
+
+                    <div>
+                        <label for="cpassword" class="p-2">Confirm Password </label>
+                        <input id="cpassword" type="password" placeholder="" name="cpassword" required />
+                    </div>
+
+                    <div>
+                        <label for="num" class="p-2">Number</label>
+                        <input id="num" type="text" placeholder="" name="num" required />
+                    </div>
+
+                    <div>
+                        <label for="bc" class="p-2">Business Category</label>
+                        <input id="bc" type="text" placeholder="" name="bc" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-3 login">
+                <a href="/" class="login">Already have an Account? Login</a>
+            </div>
+
+            <button class="btn btn--form" type="submit" value="Signup" onclick="register()">
+                Signup
+            </button>
+        </form>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

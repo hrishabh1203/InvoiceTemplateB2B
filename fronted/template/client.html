@@ -1,0 +1,515 @@
+{%include 'sidebar.html'%}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="static/css/ index.css">
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css">
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="static/js/ajax.js"></script>
+
+
+    <title>Your_client</title>
+</head>
+
+<style>
+    body {
+        /* background-color: #ECECEC; */
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://img.freepik.com/free-vector/technology-concept-background_23-2148116640.jpg?size=626&ext=jpg&ga=GA1.1.961609578.1687610561&semt=ais');
+        /* Replace 'your_image_url.jpg' with the actual URL of your image */
+        background-size: cover;
+        transform: scaleX(-1);
+        /* Flip the background image horizontally */
+        z-index: -1;
+        /* Ensure the pseudo-element is behind the content */
+    }
+
+    .row-shadow {
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 10px;
+        background-color: #ffffff92;
+    }
+
+    #add_client {
+        position: relative;
+        float: right;
+    }
+
+    .modal-content {
+        width: 200%;
+        margin-left: -15rem !important;
+        background: linear-gradient(to right, #aedeee, #e5a4af);
+        color: rgb(254, 254, 254);
+        border-radius: 20px;
+    }
+
+    .fa {
+        float: right;
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 1rem;
+    }
+
+    #show_1 {
+        display: none;
+    }
+
+    #show_1.active {
+        display: block;
+    }
+
+    #show_2 {
+        display: none;
+    }
+
+    #show_2.active {
+        display: flex;
+    }
+
+    #uploadedImage {
+        height: 150px;
+        width: 35%;
+    }
+
+    #show_3 {
+        display: none;
+    }
+
+    #show_3.active {
+        display: flex;
+    }
+</style>
+
+<body>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content mx-auto">
+
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Client</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="row m-2">
+                        <div class="col-lg-12">
+                            <label for="">Add Logo</label>
+                            <br>
+                            <input type='file' class="mt-3 mb-3" id="readUrl">
+
+                            <img id="uploadedImage" src="#" class="m-4" alt="Uploaded Image"
+                                accept="image/png, image/jpeg" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="row mx-1">
+
+                        <div class="col-lg-6">
+                            <form>
+
+                                <label for="">Client's Business Name
+                                    <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="client">
+                                <br>
+                                <label for="">Client's Position
+                                    <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="Position">
+                                <br>
+                                <label for="s_country">Select Country
+                                    <span class="text-danger">*</span></label><br>
+                                <select class=" form-control form-select" id="s_country"
+                                    aria-label="Default select example">
+                                    <option selected></option>
+                                    <option value="India">India</option>
+                                    <option value="Uk">United Kingdom (Uk)</option>
+                                    <option value="US">United States of America (US)</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="Canada">Canada</option>
+                                </select>
+
+                            </form>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <form>
+
+                                <label for="">Client Industry
+                                </label>
+                                <input type="text" class="form-control" id="industry">
+
+                                <label for="" class="m-3">City
+                                </label>
+                                <input type="text" class="form-control" id="city">
+
+
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- tax information -->
+
+                    <div class="row mx-1 mt-5" id="tax">
+                        <div class="col-lg-12">
+                            <h6>Tax Information <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_1" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="row mx-1" id="show_1">
+                        <div class="col-lg-6 my-4">
+                            <label for="" class="vat-label">Vat Number</label>
+                            <div class="gamech" style="display: none;">
+                                <input type="text" class="vat-int">
+                                <button class="btn save-btn"> save </button>
+                            </div>
+                            <input type="text" class="form-control" id="vat">
+                        </div>
+                    </div>
+
+                    <!-- tax information end -->
+
+                    <!-- address -->
+
+                    <div class="row mt-5 mx-1">
+                        <div class="col-lg-12">
+                            <h6>Address <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_2" aria-hidden="true"></i>
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <div class="row mx-1 my-4" id="show_2">
+
+                        <!-- <div class="col-lg-6">
+                            <label for="" class="">Select Country</label>
+                            <select class=" form-control form-select" id="s1_country"
+                                aria-label="Default select example">
+                                <option selected></option>
+                                <option value="1">India</option>
+                                <option value="2">Unnited Kingdom (Uk)</option>
+                                <option value="2">United States of America (US)</option>
+                                <option value="3">Germany</option>
+                                <option value="3">Canada</option>
+                            </select>
+                            <br>
+                            <label for="" class="">City</label>
+                            <input type="text" class="form-control" id="city1">
+                        </div> -->
+
+                        <div class="col-lg-6">
+                            <label for="" class="">State / Province</label>
+                            <input type="text" class="form-control" id="state">
+                            <br>
+                            <label for="" class="">Postal Code / Zip Code</label>
+                            <input type="text" class="form-control" id="zip">
+                        </div>
+
+                        <div class="col-lg-12 my-3">
+                            <label for="" class="">Street Address</label>
+                            <input type="text" class="form-control" id="steet">
+                        </div>
+
+                    </div>
+
+                    <!-- address end -->
+
+                    <!-- Additional Details -->
+
+                    <div class="row mt-5 mx-1">
+                        <div class="col-lg-12">
+                            <h6>Additional Details <span class="text-muted">(option)</span>
+                                <i class="fa fa-angle-down" id="tab_3" aria-hidden="true"></i>
+                            </h6>
+
+                        </div>
+                    </div>
+
+                    <div class="row mx-1 my-4" id="show_3">
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Business Alias (Nick Name)</label>
+                            <input type="text" class="form-control" id="Nick">
+                            <br>
+                            <label for="" class="">Email</label>
+                            <input type="text" class="form-control" id="Email">
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="" class="">Unique Key</label>
+                            <input type="text" class="form-control" id="Key">
+                            <br>
+
+                            <label for="" class="">Phone Number</label>
+                            <input type="text" class="form-control" list="Number" id="Number">
+                            <datalist id="Number">
+                                <option value="123456789">
+                                <option value="000000078">
+                            </datalist>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- Additional Details end -->
+                    <!-- bank details -->
+
+                    <div class="row mt-4 mx-1">
+                        <div class="col-lg-12 ">
+                            <div class="d-flex  justify-content-between">
+                                <h6 class="py-4">Bank Details</h6>
+                                <i id="bank_tab" aria-hidden="true" class="fa fa-angle-down angle py-4"></i>
+                            </div>
+
+                            <div class="bank">
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Account Holder Name</label>
+                                    <input type="text" placeholder="Account Holder Name" id="account_h"
+                                        class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Account Number</label>
+                                    <input type="text" placeholder="Account Number" id="account_n" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">IFSC</label>
+                                    <input type="text" placeholder="IFSC" id="ifsc" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">SWIFT</label>
+                                    <input type="text" placeholder="SWIFT" id="swift" class="form-control">
+                                </div>
+                                <div class="my-4">
+                                    <label class="ml-2" for="">Bank</label>
+                                    <input type="text" placeholder="Bank" id="bank" class="form-control">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- bank details end -->
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button class="btn text-center btn-success px-3 " onclick="add_client()" data-dismiss="modal">Save &
+                        Continue </button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- The Modal End -->
+
+    <!-- #617183; -->
+
+    <section class="home">
+        <div class="container-fluid">
+
+            <div class="row  row-shadow m-5">
+
+                <div class="col-lg-6">
+
+                    <div class="header py-4">
+                        <span id="username" hidden>{{session.get('username')}}</span>
+                        <p class="ml-4">XYZ <span class="mx-5">Your Client</span> </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <button class="btn btn-info mt-4" data-toggle="modal" data-target="#myModal" id="add_client">+ Add
+                        Client
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="row  row-shadow mx-5 py-3">
+
+                <div id="example_wrapper" class="col-lg-12 my-5 ">
+
+                    <table id="example" class="" style="width:100%; border: 2px solid #ECF2FF"
+                        aria-describedby="example_info">
+                        <thead style="background-color: rgb(247, 250, 255);">
+                            <tr>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1"
+                                    colspan="1" aria-sort="ascending"
+                                    aria-label="Name: activate to sort column descending" style="width: 133.4px;">Name
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                                    aria-label="Position: activate to sort column ascending" style="width: 221.575px;">
+                                    Position
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                                    aria-label="Office: activate to sort column ascending" style="width: 98.75px;">
+                                    Office
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                                    aria-label="Age: activate to sort column ascending" style="width: 40.0125px;">
+                                    industry
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                                    aria-label="Start date: activate to sort column ascending" style="width: 87.175px;">
+                                    Country</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                                    aria-label="Salary: activate to sort column ascending" style="width: 74.7625px;">
+                                    status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {%for row in rep_data:%}
+                                <td>{{row.get('Business_name')}}</td>
+                                <td>{{row.get('position')}}</td>
+                                <td>{{row.get('city')}}</td>
+                                <td>{{row.get('industry')}}</td>
+                                <td>{{row.get('country')}}</td>
+                                <td>{{row.get('status')}}</td>
+                            </tr>
+                            {%endfor%}
+
+                        </tbody>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </section>
+
+
+
+    <script>
+
+        document.getElementById('readUrl').addEventListener('change', function () {
+            if (this.files[0]) {
+                var picture = new FileReader();
+                picture.readAsDataURL(this.files[0]);
+                picture.addEventListener('load', function (event) {
+                    document.getElementById('uploadedImage').setAttribute('src', event.target.result);
+                    document.getElementById('uploadedImage').style.display = 'block';
+                });
+            }
+        });
+
+        let vatLabel = document.querySelector('.vat-label')
+        let vat_int = document.querySelector('.vat-int')
+        let game = document.querySelector('.gamech')
+        let saveBtn = document.querySelector('.save-btn')
+
+        vatLabel.addEventListener('click', (e) => {
+            e.target.style.display = 'none'
+            game.style.display = 'block'
+            vat_int.value = e.target.innerText
+        })
+
+        saveBtn.addEventListener('click', () => {
+            if (vat_int.value == '') {
+                vatLabel.innerText = 'Vat Number'
+                vatLabel.style.display = 'block'
+                game.style.display = 'none'
+            } else {
+                vatLabel.style.display = 'block'
+                game.style.display = 'none'
+                vatLabel.innerText = vat_int.value
+            }
+        })
+
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     let table = new DataTable('#example');
+        // });
+        $(document).ready(function () {
+            let table = $('#example').DataTable({
+                scrollX: true,
+            });
+        });
+
+        $(document).ready(function () {
+            $('#tab_1').on('click', function () {
+                $('#show_1').toggleClass('active')
+            });
+
+            $('#tab_2').on('click', function () {
+                $('#show_2').toggleClass('active')
+            });
+
+            $('#tab_3').on('click', function () {
+                $('#show_3').toggleClass('active')
+            });
+            $('#bank_tab').on('click', function () {
+                $('.bank').toggleClass('active')
+            })
+        })
+
+
+
+
+    </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.quilljs.com/1.1.6/quill.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,514 @@
+{%include 'sidebar.html'%}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="static/js/ajax.js"></script>
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="index.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet"
+        type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
+    <title>Profile Create</title>
+   
+</head>
+
+<style>
+    body {
+        /* background-color: #ECECEC; */
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://img.freepik.com/free-vector/technology-concept-background_23-2148116640.jpg?size=626&ext=jpg&ga=GA1.1.961609578.1687610561&semt=ais');
+        /* Replace 'your_image_url.jpg' with the actual URL of your image */
+        background-size: cover;
+        transform: scaleX(-1);
+        /* Flip the background image horizontally */
+        z-index: -1;
+        /* Ensure the pseudo-element is behind the content */
+    }
+
+    .profile_row {
+        box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+        border-radius: 10px;
+        background-color: #ffffff92;
+    }
+
+    .profile_header {
+        border-radius: 5px;
+        background-color: #ffffff92;
+        margin-top: 40px;
+    }
+
+    .angle {
+        font-size: 1.7rem;
+        font-weight: bold;
+    }
+
+    /* === */
+    #image_preview {
+        height: 120px;
+        width: 140px;
+        border: 1px solid black;
+    }
+
+    .img-responsive {
+        height: 119px !important;
+    }
+
+    .binfo {
+        display: none;
+        transition: 8s all !important;
+    }
+
+    .binfo.active {
+        display: block;
+    }
+
+    .pinfo {
+        display: none;
+    }
+
+    .pinfo.active {
+        display: block;
+    }
+
+    .details {
+        display: none;
+    }
+
+    .details.active {
+        display: block;
+    }
+
+    .tax {
+        display: none;
+    }
+
+    .tax.active {
+        display: block;
+    }
+
+    .bank {
+        display: none;
+    }
+
+    .bank.active {
+        display: block;
+    }
+
+    .fa-check-square {
+        color: rgb(27, 185, 52);
+    }
+
+    .li {
+        color: green;
+        font-size: 1rem;
+    }
+
+
+</style>
+
+<body>
+
+
+    <section class="home">
+        <div class="container-fluid" id="container">
+            <div class="row">
+                <div class="col-lg-11 p-4 ml-5 profile_header" >
+                    <h5 class="ml-5 text-start">Update Your Business Profile</h5>
+                </div>
+            </div>
+
+            <div class="container ">
+                <div class="row ">
+                    <div class="col-lg-6 mt-5">
+                        <div class="row">
+                            <div class="col-lg-12  border border-2 profile_row">
+                                <div class="d-flex   justify-content-between ">
+                                    <h6 class="py-4">1. Basic Information</h6>
+                                    <i id="binfo_tab" class="fa fa-angle-down angle py-4"></i>
+                                </div>
+
+                                <div class="binfo">
+                                    <p>Profile Image/Business Logo</p>
+                                    <p>Upload a professional picture if you are a freelancer</p>
+
+                                    <input type="file" class="" id="images" name="images[]" onchange="preview_images();"
+                                        multiple />
+                                    <br>
+                                    <label for="images" class="my-3" id="image_preview"></label>
+
+                                    <br>
+
+                                    <!-- <label for="country">Country <span class="text-danger">*</span></label>
+                                    <br>
+                                    <select class="form-control" id="country" aria-label="Default select example">
+                                        <option selected>Open this select menu</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select> -->
+
+
+
+
+                                    <label class="form-check-label" for="bn">
+                                        Your Name/Business Name
+                                    </label><br>
+                                    <input class="form-control" type="text" name="flexRadioDefault" id="bn">
+                                    <br>
+
+                                    <label class="form-check-label" for="dn">
+                                        Brand or Display name
+                                    </label><br>
+                                    <input class="form-control" type="text" name="flexRadioDefault" id="dn">
+
+                                    <div class="d-flex justify-content-center my-4">
+                                        <button class="btn bg-primary text-white" onclick="save_profile()">Save Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-lg-12  border border-2 profile_row">
+                                <div class="d-flex   justify-content-between">
+                                    <h6 class="py-4">2. Profile Information</h6>
+                                    <i id="pinfo_tab" class="fa fa-angle-down angle py-4"></i>
+                                </div>
+
+                                <div class="pinfo">
+
+
+                                    <div class="my-4">
+                                        <label for="">Team Size <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" min="1" max="100">
+                                        <br>
+                                        <label for="">Website URL<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control">
+                                        <br>
+                                        <label for="">In Business Since</label>
+                                        <input type="date" class="form-control">
+                                        <br>
+                                        <label for="">Your Business Category <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control">
+                                        <br>
+                                        <label for="">Business Tagline</label>
+                                        <input type="text" placeholder="Highlight Your Product or Service"
+                                            class="form-control">
+                                        <br>
+                                        <br>
+                                        <br>
+
+                                        <div class="d-flex justify-content-center my-4">
+                                            <button class="btn bg-primary text-white ">Save Change</button>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 border border-2 profile_row">
+                                <div class="d-flex   justify-content-between">
+                                    <h6 class="py-4">3. Address & Communication Details</h6>
+                                    <i id="details_tab" class="fa fa-angle-down angle py-4"></i>
+                                </div>
+
+                                <div class="details">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label class="ml-2" for="countryDropdown">Country</label>
+                                            <select class="form-control" id="countryDropdown"
+                                                aria-label="Country selection">
+                                                <option value="" disabled selected>Select your country</option>
+                                            </select>
+
+                                            <div class="my-4">
+                                                <label class="ml-2" for="city">City</label>
+                                                <input type="text" placeholder="Enter Your City Name" id="city"
+                                                    class="form-control">
+                                            </div>
+
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="ml-2" for="state">States</label>
+                                            <input type="text" placeholder="State" id="code"
+                                            class="form-control">
+
+                                            <div class="my-4">
+                                                <label class="ml-2" for="code">Postal Code / Zip Code</label>
+                                                <input type="text" placeholder="Postal Code / Zip Code" id="code"
+                                                    class="form-control">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label for="address">Street Address</label>
+                                            <input type="text" placeholder="Enter Street Address" class="form-control"
+                                                id="address">
+
+                                            <div class="d-flex justify-content-center my-4">
+                                                <button class="btn bg-primary text-white">Save Change</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row my-2">
+                            <div class="col-lg-12 ]border border-2 profile_row">
+                                <div class="d-flex  justify-content-between">
+                                    <h6 class="py-4">4. Add Tax</h6>
+                                    <i id="tax_tab" class="fa fa-angle-down angle py-4"></i>
+                                </div>
+
+                                <div class="tax">
+                                    <div class="my-4">
+                                        <label class="ml-2" for="gst">GST</label>
+                                        <input type="text" placeholder="Gst No." id="gst" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="gst">Pan Card No.</label>
+                                        <input type="text" placeholder="Pan No." id="gst" class="form-control">
+                                    </div>
+
+                                    <div class="d-flex justify-content-center my-4">
+                                        <button class="btn bg-primary text-white ">Save Change</button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                        <!-- <div class="row my-2">
+                            <div class="col-lg-12 border border-2 profile_row">
+                                <div class="d-flex  justify-content-between">
+                                    <h6 class="py-4">4. Bank Details</h6>
+                                    <i id="bank_tab" class="fa fa-angle-down angle py-4"></i>
+                                </div>
+
+                                <div class="bank">
+                                    <div class="my-4">
+                                        <label class="ml-2" for="">Account Holder Name</label>
+                                        <input type="text" placeholder="Account Holder Name" id="" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="">Account Number</label>
+                                        <input type="text" placeholder="Account Number" id="" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="">IFSC</label>
+                                        <input type="text" placeholder="IFSC" id="" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="">SWIFT</label>
+                                        <input type="text" placeholder="SWIFT" id="" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="">Bank</label>
+                                        <input type="text" placeholder="Bank" id="" class="form-control">
+                                    </div>
+
+                                    <div class="d-flex justify-content-center my-4">
+                                        <button class="btn bg-primary text-white ">Save Change</button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div> -->
+                        <div class="row my-2">
+                            <div class="col-lg-12 border border-2 profile_row">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="py-4">4. Bank Details</h6>
+                                    <i id="bank_tab" class="fa fa-angle-down angle py-4"></i>
+                                </div>
+
+                                <div class="bank">
+                                    <!-- Add a dropdown for selecting the country -->
+
+                                    <div class="my-4">
+                                        <label class="ml-2" for="accountHolderName">Account Holder Name</label>
+                                        <input type="text" placeholder="Account Holder Name" id="accountHolderName"
+                                            class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="accountNumber">Account Number</label>
+                                        <input type="text" placeholder="Account Number" id="accountNumber"
+                                            class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="ifsc">IFSC</label>
+                                        <input type="text" placeholder="IFSC" id="ifsc" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="swift">SWIFT</label>
+                                        <input type="text" placeholder="SWIFT" id="swift" class="form-control">
+                                    </div>
+                                    <div class="my-4">
+                                        <label class="ml-2" for="bank">Bank</label>
+                                        <input type="text" placeholder="Bank" id="bank" class="form-control">
+                                    </div>
+
+                                    <div class="d-flex justify-content-center my-4">
+                                        <button class="btn bg-primary text-white" onclick="saveChanges()">Save
+                                            Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-4 p-4">
+                        <div class="p-4 profile_row">
+                            <div class="ml-5">
+                                <h6 class="d-flex">
+                                    <li class="li"></li>Basic Information
+                                </h6>
+                                <p>Name, Alias Name, Logo</p>
+                            </div>
+                            <div class="ml-5">
+                                <h6 class="d-flex">
+                                    <li class="li"></li>Profile Information
+                                </h6>
+                                <p>Business Type, URL, Category etc.</p>
+                            </div>
+                            <div class="ml-5">
+                                <h6 class="d-flex">
+                                    <li class="li"></li>Address & Communication
+                                    Details
+                                </h6>
+                                <p>Street Address, City, Pin Code etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+
+            $('#binfo_tab').on('click', function () {
+                $('.binfo').toggleClass('active')
+            })
+
+            $('#pinfo_tab').on('click', function () {
+                $('.pinfo').toggleClass('active')
+            })
+
+            $('#details_tab').on('click', function () {
+                $('.details').toggleClass('active')
+            })
+
+            $('#tax_tab').on('click', function () {
+                $('.tax').toggleClass('active')
+            })
+
+            $('#bank_tab').on('click', function () {
+                $('.bank').toggleClass('active')
+            })
+
+
+            new FroalaEditor('textarea');
+
+        })
+
+
+        function preview_images() {
+            var total_file = document.getElementById("images").files.length;
+            for (var i = 0; i < total_file; i++) {
+                $('#image_preview').append(`
+                    <div class=''>
+                        <img style='width:100%' class='img-responsive' src='${URL.createObjectURL(event.target.files[i])}'>
+                    </div>`);
+                total_file.classList.add('logo')
+
+            }
+        }
+        // function resetForm() {
+        //     $("#image_preview").html("");
+        //     return true;
+        // }
+        // JavaScript
+
+        const countryDropdown = document.getElementById("countryDropdown");
+        fetch("https://restcountries.com/v3.1/all")
+            .then(response => response.json())
+            .then(countries => {
+                
+
+                // Populate the dropdown with options
+                countries.forEach(country => {
+                    const option = document.createElement("option");
+                    option.value = country.name.common.toLowerCase();
+                    option.text = country.name.common;
+                    countryDropdown.add(option);
+                });
+              
+            })
+            .catch (error => console.error("Error fetching countries:", error));
+
+
+
+
+        function updateBankDetails(countryData) {
+            // Modify bank details based on the country data
+            // Example: Update labels, show/hide fields, etc.
+            document.getElementById("ifsc").value = countryData.ifsc || "";
+            document.getElementById("swift").value = countryData.swift || "";
+            document.getElementById("bank").value = countryData.bank || "";
+        }
+    </script>
+</body>
+
+</html>

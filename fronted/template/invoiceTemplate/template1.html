@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+    <link href="https://cdn.quilljs.com/1.1.6/quill.snow.css" rel="stylesheet">
+    <script src="static/js/ajax.js"></script>
+    <title>Credit Note</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+</head>
+<style>
+    body {
+        margin-top: 20px;
+        background: #214d26;
+    }
+
+    .card-footer-btn {
+        display: flex;
+        align-items: center;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(30, 46, 80, .09);
+        border-radius: 0.25rem;
+        box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    }
+
+    .p-5 {
+        padding: 3rem !important;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        padding: 1.5rem 1.5rem;
+    }
+
+
+
+
+
+    .row.gutters {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .col-xl-4,
+    .col-lg-4,
+    .col-md-4,
+    .col-sm-4 {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .left-container {
+        background-color: #dee2e6;
+        /* Light Gray background for the left container */
+        border: 1px solid #dee2e6;
+        /* Light Gray border */
+        border-radius: 0.25rem;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .left-container button {
+        margin-bottom: 10px;
+    }
+
+    .button-container {
+        text-align: center;
+    }
+
+    .button-container button {
+        margin-bottom: 10px;
+    }
+
+    .invoice-container {
+        padding: 1rem;
+    }
+
+    .invoice-container .invoice-header .invoice-logo {
+        margin: 0.8rem 0 0 0;
+        display: inline-block;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #bcd0f7;
+    }
+
+    .invoice-container .invoice-header .invoice-logo img {
+        max-width: 130px;
+    }
+
+    .invoice-container .invoice-header address {
+        font-size: 0.8rem;
+        color: #8a99b5;
+        margin: 0;
+    }
+
+    .invoice-container .invoice-details {
+        margin: 1rem 0 0 0;
+        padding: 1rem;
+        line-height: 180%;
+        background: #1a233a;
+    }
+
+    .invoice-container .invoice-details .invoice-num {
+        text-align: right;
+        font-size: 0.8rem;
+    }
+
+    .invoice-container .invoice-body {
+        padding: 1rem 0 0 0;
+    }
+
+    .invoice-container .invoice-footer {
+        text-align: center;
+        font-size: 0.7rem;
+        margin: 5px 0 0 0;
+    }
+
+    .invoice-status {
+        text-align: center;
+        padding: 1rem;
+        background: #272e48;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+
+    .invoice-status h2.status {
+        margin: 0 0 0.8rem 0;
+    }
+
+    .invoice-status h5.status-title {
+        margin: 0 0 0.8rem 0;
+        color: #8a99b5;
+    }
+
+    .invoice-status p.status-type {
+        margin: 0.5rem 0 0 0;
+        padding: 0;
+        line-height: 150%;
+    }
+
+    .invoice-status i {
+        font-size: 1.5rem;
+        margin: 0 0 1rem 0;
+        display: inline-block;
+        padding: 1rem;
+        background: #1a233a;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+        border-radius: 50px;
+    }
+
+    .invoice-status .badge {
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 767px) {
+        .invoice-container {
+            padding: 1rem;
+        }
+    }
+
+    .card {
+        background: #272E48;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        border: 0;
+        margin-bottom: 1rem;
+    }
+
+    .custom-table {
+        border: 1px solid #2b3958;
+    }
+
+    .custom-table thead {
+        background: #2f71c1;
+    }
+
+    .custom-table thead th {
+        border: 0;
+        color: #ffffff;
+    }
+
+    .custom-table>tbody tr:hover {
+        background: #172033;
+    }
+
+    .custom-table>tbody tr:nth-of-type(even) {
+        background-color: #1a243a;
+    }
+
+    .custom-table>tbody td {
+        border: 1px solid #2e3d5f;
+    }
+
+    .table {
+        background: #1a243a;
+        color: #bcd0f7;
+        font-size: .75rem;
+    }
+
+    .text-success {
+        color: #c0d64a !important;
+    }
+
+    .custom-actions-btns {
+        margin: auto;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .custom-actions-btns .btn {
+        margin: .3rem 0 .3rem .3rem;
+    }
+
+    .notes-container h4 {
+        color: rgb(125, 121, 227);
+    }
+
+    .notes-container p {
+        color: #fff;
+    }
+
+    .terms h4 {
+        color: rgb(125, 121, 227);
+    }
+
+    .terms p {
+        color: #fff
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="row gutters">
+
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <!-- Left Container -->
+                <div class="left-container">
+                    <button class="btn btn-danger" onclick="goBack()">
+                        Back
+                    </button>
+                    <button class="btn btn-primary" onclick="downloadAsPDF()">
+                        <i class="fas fa-download mr-2"></i> Download
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print mr-2"></i> Print
+                    </button>
+
+                    <button class="btn btn-info" data-toggle="modal" data-target="#templateModal">
+                        <i class="fas fa-file mr-2"></i> Change Template
+                    </button>
+                </div>
+
+
+            </div>
+
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-12">
+                <div class="card downloadfromhere">
+                    <div class="card-body p-4">
+                        <div class="container">
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="card">
+                                        <div class="card-body p-0">
+                                            <div class="invoice-container">
+                                                <div class="invoice-header">
+
+                                                    <!-- Row start -->
+                                                    <div class="row gutters">
+                                                        <!-- Left section for Invoice details -->
+                                                        <div class="col-lg-6 col-6 col-sm-6">
+                                                            <address class="text-left text-white"
+                                                                style="font-size: 18px;">
+                                                                Invoice No: <span id="invoiceNo"></span><br>
+                                                                Invoice Date: <span id="invoiceDate"></span><br>
+                                                                Link Invoice: <span id="link_invoice"></span>
+                                                            </address>
+                                                        </div>
+
+
+                                                        <!-- Right section for the logo -->
+                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 "
+                                                            style="left: 10rem;">
+                                                            <div class="invoice-details" style="border-radius: 10px;">
+                                                                <div class="image-container" >
+                                                                    <img style="border-radius: 10px;" src="../static/image/download.jpg"
+                                                                        alt="Your Logo" class="img-fluid">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Row end -->
+
+                                                    <!-- Row start -->
+                                                    <div class="row gutters">
+                                                        <!-- Left side -->
+                                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="invoice-details text-white" style="border-radius: 10px;">
+                                                                <h5>Billed To (Client Details)</h5>
+                                                                <h6 class="" id="bussiness_detail"></h6>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Right side -->
+                                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12"
+                                                            >
+                                                            <div class="invoice-details text-white" style="border-radius: 10px;">
+                                                                <h5>Billed To (Client Details)</h5>
+                                                                {% for row in detail: %}
+                                                                <h6 class="mt-3">Business Name: <h8 class="">
+                                                                        {{ row.get('bussiness_name') }}</h8>
+                                                                </h6>
+
+                                                                <h6 class="">Address: <h8 class="">{{ row.get('address')
+                                                                        }}
+                                                                    </h8>
+                                                                </h6>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Row end -->
+
+                                                </div>
+
+                                                <div class="invoice-body">
+
+                                                    <!-- Row start -->
+                                                    <div class="row gutters" >
+                                                        <div class="col-lg-12 col-md-12 col-sm-12" >
+                                                            <div class="table-responsive" style="border-radius: 10px;">
+                                                                <table class="table custom-table m-0">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Items</th>
+                                                                            <th>Product ID</th>
+                                                                            <th>Quantity</th>
+                                                                            <th>Sub Total</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                Wordpress Template
+                                                                                <p class="m-0 text-muted">
+                                                                                    Reference site about Lorem Ipsum,
+                                                                                    giving information on its origins.
+                                                                                </p>
+                                                                            </td>
+                                                                            <td>#50000981</td>
+                                                                            <td>9</td>
+                                                                            <td>$5000.00</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                Maxwell Admin Template
+                                                                                <p class="m-0 text-muted">
+                                                                                    As well as a random Lipsum
+                                                                                    generator.
+                                                                                </p>
+                                                                            </td>
+                                                                            <td>#50000126</td>
+                                                                            <td>5</td>
+                                                                            <td>$100.00</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                Unify Admin Template
+                                                                                <p class="m-0 text-muted">
+                                                                                    Lorem ipsum has become the industry
+                                                                                    standard.
+                                                                                </p>
+                                                                            </td>
+                                                                            <td>#50000821</td>
+                                                                            <td>6</td>
+                                                                            <td>$49.99</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>&nbsp;</td>
+                                                                            <td colspan="2">
+                                                                                <p>
+                                                                                    Subtotal<br>
+                                                                                    Shipping &amp; Handling<br>
+                                                                                    Tax<br>
+                                                                                </p>
+                                                                                <h5 class="text-success"><strong>Grand
+                                                                                        Total</strong></h5>
+                                                                            </td>
+                                                                            <td>
+                                                                                <p>
+                                                                                    $5000.00<br>
+                                                                                    $100.00<br>
+                                                                                    $49.00<br>
+                                                                                </p>
+                                                                                <h5 class="text-success">
+                                                                                    <strong>$5150.99</strong>
+                                                                                </h5>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Row end -->
+
+                                                </div>
+                                                <br>
+
+                                                <div class="notes-container">
+                                                    <h4>Notes</h4>
+                                                    <p>This is where you can add your notes or any additional
+                                                        information.</p>
+                                                    <!-- You can dynamically populate the notes here using JavaScript if needed. -->
+                                                </div>
+
+                                                <br>
+                                                <div class="terms">
+                                                    <h4>Terms and Conditions</h4>
+                                                    <p>Here is your Tems aand Condition.</p>
+                                                    <!-- You can dynamically populate the notes here using JavaScript if needed. -->
+                                                </div>
+                                                <br>
+
+                                                <div class="invoice-footer text-white">
+                                                    Thank you for your Business.
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- After the existing content -->
+    <!-- Modal -->
+    <div class="modal fade" id="templateModal" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="templateModalLabel">Choose a Template</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Template Options -->
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="template1">
+                                <img src="../static/image/pdf1.png" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="template2">
+                                <img src="../static/image/pdf3.png" class="img-fluid" alt="Template 2">
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="template3">
+                                <img src="../static/image/pdf2.png" class="img-fluid" alt="Template 3">
+                            </a>
+                        </div>
+                        <!-- Add more templates if needed -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    function selectTemplate(templateId) {
+        // You can apply logic based on the selected template
+        // For example, you can change the background or update the template-related styles
+
+        // Close the modal after selecting a template
+        $('#templateModal').modal('hide');
+    }
+
+    function changeTemplate() {
+        // Show the template modal
+        $('#templateModal').modal('show');
+    }
+
+    function downloadAsPDF() {
+        var element = document.querySelector('.downloadfromhere');
+        html2pdf(element);
+    }
+
+
+    // let jsonData = localStorage.getItem('dataKey');
+
+    // if (jsonData) {
+    //     let retrievedData = JSON.parse(jsonData);
+
+    //     console.log(retrievedData);
+
+    //     let creditNoteNo = retrievedData.creditNoteNo;
+    //     let creditInvoiceDate = retrievedData.creditInvoiceDate;
+    //     let creditLinkInvoice = retrievedData.creditLinkInvoice;
+    //     let creditClient = retrievedData.creditClient
+
+    //     let invoiceNameElement = document.getElementById('invoiceNo');
+    //     if (invoiceNameElement) {
+    //         invoiceNameElement.innerHTML = creditNoteNo;
+    //     }
+
+    //     let invoiceDateElement = document.getElementById('invoiceDate');
+    //     if (invoiceDateElement) {
+    //         invoiceDateElement.innerHTML = creditInvoiceDate;
+    //     } 
+
+    //     let invoiceLinkElement = document.getElementById('link_invoice');
+    //     if (invoiceLinkElement) {
+    //         invoiceLinkElement.innerHTML = creditLinkInvoice;
+    //     } 
+
+    //     let invoiceCredit = document.getElementById('bussiness_detail')
+    //     if (invoiceCredit) {
+    //         invoiceCredit.innerHTML = creditClient;
+    //     } 
+    // } else {
+    //     console.log('No data found in localStorage.');
+    // }
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<script src="https://cdn.quilljs.com/1.1.6/quill.js"></script>
+
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="static/js/ajax.js"></script>
+
+</html>
